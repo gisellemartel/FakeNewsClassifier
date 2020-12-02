@@ -25,10 +25,6 @@ def parse_dataset(csv_file, label):
     # format date for each entry
     news["date"] = news["date"].apply(pd.to_datetime)
 
-    # TODO: is subject category not needed?
-    # print (news["subject"].unique())
-    # news.drop("subject", axis=1, inplace=news)
-
     # articles with no text should be cleaned from data
     news = news[news["text"] != ""] 
 
@@ -37,7 +33,6 @@ def parse_dataset(csv_file, label):
     news["label"] = label
 
     return news
-
 
 # extracts individual words from news article text
 def tokenize(news_data, name):
@@ -58,6 +53,12 @@ def tokenize(news_data, name):
         all_tokens.extend(words)
 
     return all_tokens, article_tokens_list
+
+def save_to_csv(X_train, X_test, y_train, y_test):
+    X_train.to_csv('training_data.csv')
+    X_test.to_csv('testing_data.csv')
+    y_train.to_csv('training_labels.csv')
+    y_test.to_csv('testing_labels.csv')
 
 # Split into training/testing data and preprocess 
 def split_and_preprocess(all_tokens, tokens_per_article, all_news):
@@ -93,26 +94,19 @@ def split_and_preprocess(all_tokens, tokens_per_article, all_news):
     y_train = pd.DataFrame(y_train, columns=["label"])
     y_test = pd.DataFrame(y_test, columns=["label"])
 
-
-    # TODO: remove? generate CSVs to view result
-    # X_train.to_csv('training_data.csv')
-    # X_test.to_csv('testing_data.csv')
-    # y_train.to_csv('training_labels.csv')
-    # y_test.to_csv('testing_labels.csv')
-
     return X_train, X_test, y_train, y_test
 
 def preprocess_test():
     print("\nTesting preprocessing of data...\n")
 
-    fake_news = parse_dataset("Fake.csv", "FAKE")
+    fake_news = parse_dataset("Fake_test.csv", "FAKE")
     print("\nPreview of Fake news Dataset")
     print(fake_news)
     print()
     
-    real_news = parse_dataset("True.csv", "REAL")
+    real_news = parse_dataset("True_test.csv", "REAL")
     print("\nPreview of Real news Dataset")
-    print(fake_news)
+    print(real_news)
     print()
 
     # join data
@@ -140,4 +134,5 @@ def preprocess_test():
     return  X_train, X_test, y_train, y_test, all_tokens
 
 if __name__ == "__main__":
-    preprocess_test()
+    X_train, X_test, y_train, y_test = preprocess_test()
+    # save_to_csv(X_train, X_test, y_train, y_test)

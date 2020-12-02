@@ -8,7 +8,6 @@ from sklearn.model_selection import GridSearchCV
 import sys
 sys.path.insert(1, '../')
 
-import preprocess as preprocess
 import tools as tools
 
 def random_forest_train_at_depth(X,y,depth):
@@ -30,18 +29,18 @@ def random_forest_predict(models, X):
         predictions.append(m.predict(X))
     return predictions
 
-def test_run():
-    X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test()
+def test_run(X_train, X_test, y_train, y_test):
+    print("\nTesting Random Forest Classifier ...\n")
 
-    while(input("Would you like to run the Random Forest Classifier? select y to run and any other key otherwise") == 'y'):
-        print("\nTesting Random Forest Classifier ...\n")
+    model = random_forest_train(X_train, y_train, [50, 60, 70])
+    Y_pred = random_forest_predict(model, X_test)
 
-        model = random_forest_train(X_train, y_train, [50, 60, 70])
-        Y_pred = random_forest_predict(model, X_test)
+    # tools.plot_predicted_labels(y_test, y_pred, "NaiveBayes", True)
 
-        # TODO: should print result for all depths
-        for y_pred in Y_pred:
-            tools.display_prediction_scores(y_test,y_pred)
-            tools.write_metrics_to_file(y_test,y_pred,"RandomForest")
-            tools.plot_confusion_matrix(y_test,y_pred,"RandomForest", True)
-            tools.plot_feature_importances(X_train, model[0].best_estimator_, "RandomForest", True)
+    # # TODO: should print result for all depths
+    # for y_pred in Y_pred:
+        
+    #     tools.display_prediction_scores(y_test,y_pred)
+    #     tools.write_metrics_to_file(y_test,y_pred,"RandomForest")
+    #     tools.plot_confusion_matrix(y_test,y_pred,"RandomForest", True)
+    #     tools.plot_feature_importances(X_train, model[0].best_estimator_, "RandomForest", True)

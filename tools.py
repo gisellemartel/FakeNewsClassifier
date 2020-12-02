@@ -14,6 +14,38 @@ from sklearn.metrics import precision_recall_fscore_support as score
 
 RESULTS_DIR = "./results/"
 
+def plot_labels(y):
+    labels = 'Real news','Fake news'
+    sizes = [len(y[y==0]), len(y[y==1])]
+    plt.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+    plt.gca().axis('equal')
+
+def plot_predicted_labels(test, prediction, classifier_name, savefig=False):
+    plt.figure()
+    fig, ax = plt.subplots(nrows=1, ncols=2)
+
+    ax[0].set_title("True Labels")
+    plt.sca(ax[0])
+    plot_labels(test)
+        
+    plt.sca(ax[1])
+    ax[1].set_title("Predicted Labels")
+    plot_labels(prediction)
+
+    fig.set_size_inches((11,4))
+
+    if savefig:
+        file_name = '{}{}/piechart.png'.format(RESULTS_DIR,classifier_name)
+        print("Saving piechart of results for {} Classifier to file {}...".format(classifier_name, file_name))
+        plt.savefig(file_name)
+
+def display_best_estimator(accuracy, estimator, hyperparams):
+    print("Best {} estimator accuracy: {:.3f}%".format(estimator, accuracy))
+    print("Hyperparams:\n")
+
+    for param in hyperparams:
+        print("{}: {}\n".format(param, hyperparams[param]))
+
 def display_prediction_scores(test,prediction):
     accuracy = sklearn.metrics.accuracy_score(test,prediction)
     recall = sklearn.metrics.recall_score(test,prediction)
