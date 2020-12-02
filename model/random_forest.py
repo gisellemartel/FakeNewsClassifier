@@ -14,13 +14,13 @@ def Random_Forest(X_train, X_test,  y_train, y_test):
     depth = [50, 60, 70]
     print("This part may take a while...")
     for j in depth:
-        print("\tEvaluating at depth value: {}".format(j))
+        print("Performing GridSearch with 200 estimators at depth value: {}".format(j))
         clf_GridSearch = GridSearchCV(estimator = clf,
                                       param_grid = {'n_estimators': [200], 'max_depth': [j]},
                                       cv = 5).fit(X_train, np.ravel(y_train))
     y_pred_clf = clf_GridSearch.predict(X_test)
-    print("\t Random Forest Accuracy is:", metrics.accuracy_score(y_test, y_pred_clf))
-    print("\t Random Forest Mean Squared Error is: {}\n".format(np.sqrt(mean_squared_error(y_test, y_pred_clf))))
+    print("\nRandom Forest Accuracy is:", metrics.accuracy_score(y_test, y_pred_clf))
+    print("Random Forest Mean Squared Error is: {}\n".format(np.sqrt(mean_squared_error(y_test, y_pred_clf))))
 
     clf_GridSearch.best_params_
     
@@ -39,12 +39,12 @@ def Random_Forest(X_train, X_test,  y_train, y_test):
     precision, recall, fscore, support = score(y_test,y_pred_clf)
     
     with open('./results/RandomForest/RF_metrics.txt', 'w') as file:
-        file.write('False Precision : {:.2f}\n'.format(precision[0]))
-        file.write('False Recall : {:.2f}\n'.format(recall[0]))
-        file.write('False fscore : {:.2f}\n\n'.format(fscore[0]))
-        file.write('True Precision : {:.2f}\n'.format(precision[1]))
-        file.write('True Recall : {:.2f}\n'.format(recall[1]))
-        file.write('True fscore : {:.2f}\n'.format(fscore[1]))
+        file.write('False Precision : {:.5f}\n'.format(precision[0]))
+        file.write('False Recall : {:.5f}\n'.format(recall[0]))
+        file.write('False fscore : {:.5f}\n\n'.format(fscore[0]))
+        file.write('True Precision : {:.5f}\n'.format(precision[1]))
+        file.write('True Recall : {:.5f}\n'.format(recall[1]))
+        file.write('True fscore : {:.5f}\n'.format(fscore[1]))
     plt.figure()
     
     feature_importances = pd.Series(clf_GridSearch.best_estimator_.feature_importances_, index=X_train.columns)
