@@ -15,7 +15,7 @@ def logistic_regression_predict(model, X):
     return model.predict(X)
 
 if __name__ == "__main__":
-
+    preprocess.override_dir("../")
     X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test()
 
     print("\nTesting Logistic Regression Classifier ...\n")

@@ -16,7 +16,7 @@ def decision_tree_predict(model, X):
     return model.predict(X)
 
 if __name__ == "__main__":
-
+    preprocess.override_dir("../")
     X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test()
 
     print("\nTesting Decision Tree Classifier ...\n")
@@ -27,4 +27,5 @@ if __name__ == "__main__":
     tools.display_prediction_scores(y_test,y_pred)
     tools.write_metrics_to_file(y_test,y_pred,"DecisionTree")
     tools.plot_confusion_matrix(y_test,y_pred,"DecisionTree", True)
+    tools.plot_feature_importances(X_train, model, "DecisionTree", True)
 

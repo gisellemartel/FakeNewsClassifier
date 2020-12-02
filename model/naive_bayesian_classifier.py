@@ -9,11 +9,11 @@ import tools as tools
 
 def naive_bayesian_train(X,y):
     model = MultinomialNB()
-    model.fit(X_train, np.ravel(y_train))
+    model.fit(X, y)
     return model
 
 def naive_bayesian_predict(model, X):
-    return model.predict(XS)
+    return model.predict(X)
 
 def display_result(model):
     #Storing the number of times each token occurs in a True article
@@ -33,7 +33,7 @@ def display_result(model):
     tokens.sort_values('fake/true ratio', ascending=False).head(10)
 
 if __name__ == "__main__":
-
+    preprocess.override_dir("../")
     X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test()
 
     print("\nTesting Naive Bayesian Classifier ...\n")

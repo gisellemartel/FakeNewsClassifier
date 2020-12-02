@@ -45,6 +45,7 @@ def write_metrics_to_file(test, prediction, classifier_name):
         file.write('True fscore : {:.2f}\n'.format(fscore[1]))
 
 def plot_confusion_matrix(test, prediction, classifier_name, savefig=False):
+    plt.figure()
     conf_matrix = sklearn.metrics.confusion_matrix(test, prediction)
     labels =  np.array([[conf_matrix[0][0],conf_matrix[0][1]],[conf_matrix[1][0],conf_matrix[1][1]]])
     plt.title('Confusion matrix of the {} classifier\n'.format(classifier_name))
@@ -57,3 +58,11 @@ def plot_confusion_matrix(test, prediction, classifier_name, savefig=False):
     
     if savefig:
         plt.savefig('{}{}/confusion_matrix.png'.format(RESULTS_DIR,classifier_name))
+
+def plot_feature_importances(X, estimator, classifier_name, savefig=False):
+    plt.figure()
+    feature_importances = pd.Series(estimator.feature_importances_, index=X.columns)
+    feature_importances.nlargest(25).plot(kind='barh')
+    plt.title("Feature importances for top 25 words")
+    if savefig:
+        plt.savefig('{}{}/feature_importances.png'.format(RESULTS_DIR,classifier_name))
