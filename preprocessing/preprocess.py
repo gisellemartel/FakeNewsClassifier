@@ -62,7 +62,6 @@ def tokenize(news_data, name):
 
     return all_tokens, article_tokens_list
 
-
 # Split into training/testing data and preprocess 
 def split_and_preprocess(all_tokens, tokens_per_article, all_news):
 
@@ -75,8 +74,8 @@ def split_and_preprocess(all_tokens, tokens_per_article, all_news):
     #Create 80-30 train test split
     print("Splitting data: 70% training, 30% testing")
     X_train, X_test, y_train, y_test = ms.train_test_split(X, y, test_size = 0.3, random_state=0)
-    print(X_train.shape, X_test.shape)
-    print(y_train.shape, y_test.shape)
+    # print(X_train.shape, X_test.shape)
+    # print(y_train.shape, y_test.shape)
 
     # Generate the Sparse Document-Term Matrix from the training data
     vectorizer = TfidfVectorizer(min_df = 0.1, preprocessor = ' '.join)
@@ -106,44 +105,37 @@ def split_and_preprocess(all_tokens, tokens_per_article, all_news):
 
     return X_train, X_test, y_train, y_test
 
-def plot_data(X, y):
-    plt.scatter(*X[y==0].T, marker="x", c="g", label="Real news")
-    plt.scatter(*X[y==1].T, marker="x", c="r", label="Fake news")
-    plt.legend()
-    plt.gca().set_aspect('equal')  
-
-def plot_split_data(X_train, X_test, y_train, y_test):
-    fig, ax = plt.subplots(nrows=1, ncols=2)
-
-    ax[0].set_title("Training Data")
-    plt.sca(ax[0])
-    plot_data(X_train,y_train)
-        
-    plt.sca(ax[1])
-    ax[1].set_title("Testing Data")
-    plot_data(X_test,y_test)
-
-    fig.set_size_inches((8,4))  
-
-    plt.show()
-
 if __name__ == "__main__":
-    fake_news = parse_dataset("Fake_test.csv", "FAKE")
-    real_news = parse_dataset("True_test.csv", "REAL")
+    print("\nTesting preprocessing of data...\n")
 
+    fake_news = parse_dataset("Fake.csv", "FAKE")
+    print("\nPreview of Fake news Dataset")
+    print(fake_news)
+    print()
+    
+    real_news = parse_dataset("True.csv", "REAL")
+    print("\nPreview of Real news Dataset")
+    print(fake_news)
+    print()
+
+    # join data
+    all_news = pd.concat([fake_news, real_news], axis=0)
+    
     fake_news_all_tokens, fake_news_tokens_per_article = tokenize(fake_news, "fake_news")
     real_news_all_tokens, real_news_tokens_per_article = tokenize(real_news, "real_news")
 
-    # join tokens and data together
+    print()
+
+    # join tokens
     all_tokens = fake_news_all_tokens + real_news_all_tokens
     tokens_per_article = fake_news_tokens_per_article + real_news_tokens_per_article
-    
-    all_news = pd.concat([fake_news, real_news], axis=0)
 
-    print("Preview of parsed data:")
-    print(all_news)
+    print()
 
-    # join the data and pass it to split data
+    # Split and preprocess the data into training and testing data
     X_train, X_test, y_train, y_test = split_and_preprocess(all_tokens,tokens_per_article, all_news)
 
-    plot_split_data(X_train, X_test, y_train, y_test)
+    print("\nPreview of training data:")
+    print(X_train[:5])
+    print(y_train[:5])
+    print()

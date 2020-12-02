@@ -4,8 +4,6 @@ import matplotlib.pyplot as plt
 import pandas as pd
 import sklearn
 import sklearn.tree        # For DecisionTreeClassifier class
-import sklearn.ensemble    # For AdaBoostClassifier class
-import sklearn.datasets    # For make_gaussian_quantiles
 import sklearn.metrics     # For accuracy_score
 
 import sys
@@ -61,18 +59,18 @@ def plot_class_probability(model, class_index):
     
 
 def decision_tree(X,y, feature_names):
-    dtc = sklearn.tree.DecisionTreeClassifier(random_state=0);
-    dtc.fit(X,y);
+    dtc = sklearn.tree.DecisionTreeClassifier(random_state=0)
+    dtc.fit(X,y)
 
-    plot_predict(dtc);
-    plot_data(X,y);
+    plot_predict(dtc)
+    plot_data(X,y)
     plt.figure()
-    sklearn.tree.plot_tree(dtc, feature_names=feature_names);
+    sklearn.tree.plot_tree(dtc, feature_names=feature_names)
 
 
 if __name__ == "__main__":
-    fake_news = preprocess.parse_dataset("Fake.csv", "FAKE")
-    real_news = preprocess.parse_dataset("True.csv", "REAL")
+    fake_news = preprocess.parse_dataset("Fake_test.csv", "FAKE")
+    real_news = preprocess.parse_dataset("True_test.csv", "REAL")
 
     fake_news_all_tokens, fake_news_tokens_per_article = preprocess.tokenize(fake_news, "fake_news")
     real_news_all_tokens, real_news_tokens_per_article = preprocess.tokenize(real_news, "real_news")
@@ -82,9 +80,6 @@ if __name__ == "__main__":
     tokens_per_article = fake_news_tokens_per_article + real_news_tokens_per_article
 
     all_news = pd.concat([fake_news, real_news], axis=0)
-
-    print("Preview of parsed data:")
-    print(all_news)
 
     # join the data and pass it to split data
     X_train, X_test, y_train, y_test = preprocess.split_and_preprocess(all_tokens,tokens_per_article, all_news)
