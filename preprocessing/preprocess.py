@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import string
 
 import nltk
+nltk.download('punkt')
+nltk.download('wordnet')
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer 
 
@@ -12,7 +14,10 @@ import sklearn
 import sklearn.model_selection as ms
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-DATA_DIR = "./data/"
+import sys
+sys.path.insert(1, '../')
+
+DATA_DIR = sys.path[1] + "data/"
 
 # parses the dataset from the csv file and sets the correct label
 def parse_dataset(csv_file, label):
@@ -64,7 +69,7 @@ def split_and_preprocess(all_tokens, tokens_per_article, all_news):
     X = np.array(tokens_per_article, dtype="object")
 
     labels = all_news["label"]
-    y = [True if article == "FAKE" else False for article in labels]
+    y = [1 if article == "FAKE" else 0 for article in labels]
     y = pd.DataFrame(y, columns=["label"])
 
     #Create 80-30 train test split
@@ -101,6 +106,27 @@ def split_and_preprocess(all_tokens, tokens_per_article, all_news):
 
     return X_train, X_test, y_train, y_test
 
+def plot_data(X, y):
+    plt.scatter(*X[y==0].T, marker="x", c="g", label="Real news")
+    plt.scatter(*X[y==1].T, marker="x", c="r", label="Fake news")
+    plt.legend()
+    plt.gca().set_aspect('equal')  
+
+def plot_split_data(X_train, X_test, y_train, y_test):
+    fig, ax = plt.subplots(nrows=1, ncols=2)
+
+    ax[0].set_title("Training Data")
+    plt.sca(ax[0])
+    plot_data(X_train,y_train)
+        
+    plt.sca(ax[1])
+    ax[1].set_title("Testing Data")
+    plot_data(X_test,y_test)
+
+    fig.set_size_inches((8,4))  
+
+    plt.show()
+
 if __name__ == "__main__":
     fake_news = parse_dataset("Fake_test.csv", "FAKE")
     real_news = parse_dataset("True_test.csv", "REAL")
@@ -119,3 +145,5 @@ if __name__ == "__main__":
 
     # join the data and pass it to split data
     X_train, X_test, y_train, y_test = split_and_preprocess(all_tokens,tokens_per_article, all_news)
+
+    plot_split_data(X_train, X_test, y_train, y_test)
