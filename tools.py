@@ -12,10 +12,7 @@ import sklearn.metrics
 from sklearn.metrics import mean_squared_error 
 from sklearn.metrics import precision_recall_fscore_support as score
 
-import sys
-sys.path.insert(1, '../')
-
-RESULTS_DIR = sys.path[1] + "results/"
+RESULTS_DIR = "./results/"
 
 def display_prediction_scores(test,prediction):
     accuracy = sklearn.metrics.accuracy_score(test,prediction)

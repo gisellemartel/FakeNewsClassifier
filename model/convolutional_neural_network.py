@@ -1,9 +1,8 @@
-#Library Imports for item-based collaborative filter:
+import sys
+sys.path.insert(1, '../')
 
-import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
+import preprocess as preprocess
+import tools as tools
 
 #Library imports for deep-learning recommender
 import sklearn

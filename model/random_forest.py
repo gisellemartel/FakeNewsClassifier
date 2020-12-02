@@ -8,7 +8,7 @@ from sklearn.model_selection import GridSearchCV
 import sys
 sys.path.insert(1, '../')
 
-import preprocessing.preprocess as preprocess
+import preprocess as preprocess
 import tools as tools
 
 def random_forest_train_at_depth(X,y,depth):
@@ -30,8 +30,7 @@ def random_forest_predict(models, X):
         predictions.append(m.predict(X))
     return predictions
 
-if __name__ == "__main__":
-    preprocess.override_dir("../")
+def test_run():
     X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test()
 
     print("\nTesting Random Forest Classifier ...\n")
@@ -45,3 +44,6 @@ if __name__ == "__main__":
         tools.write_metrics_to_file(y_test,y_pred,"RandomForest")
         tools.plot_confusion_matrix(y_test,y_pred,"RandomForest", True)
         tools.plot_feature_importances(X_train, model[0].best_estimator_, "RandomForest", True)
+
+if __name__ == "__main__":
+    test_run()

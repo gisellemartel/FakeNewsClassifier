@@ -14,13 +14,7 @@ import sklearn
 import sklearn.model_selection as ms
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-import sys
-sys.path.insert(1, './')
-
-DATA_DIR = sys.path[1] + "data/"
-
-def override_dir(dir):
-    DATA_DIR = dir + "data/"
+DATA_DIR = "./data/"
 
 # parses the dataset from the csv file and sets the correct label
 def parse_dataset(csv_file, label):

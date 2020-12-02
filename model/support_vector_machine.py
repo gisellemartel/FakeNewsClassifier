@@ -3,7 +3,7 @@ from sklearn.svm import SVC
 import sys
 sys.path.insert(1, '../')
 
-import preprocessing.preprocess as preprocess
+import preprocess as preprocess
 import tools as tools
 
 def support_vector_machine_train(X,y):
@@ -15,8 +15,7 @@ def support_vector_machine_train(X,y):
 def support_vector_machine_predict(svc, X):
     return svc.predict(X)
 
-if __name__ == "__main__":
-    preprocess.override_dir("../")
+def test_run():
     X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test()
 
     print("\nTesting SVM Classifier ...\n")
@@ -28,3 +27,5 @@ if __name__ == "__main__":
     tools.write_metrics_to_file(y_test,y_pred,"SVC")
     tools.plot_confusion_matrix(y_test,y_pred,"SVC", True)
 
+if __name__ == "__main__":
+    test_run()

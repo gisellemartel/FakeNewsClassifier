@@ -4,7 +4,7 @@ from sklearn.naive_bayes import MultinomialNB
 import sys
 sys.path.insert(1, '../')
 
-import preprocessing.preprocess as preprocess
+import preprocess as preprocess
 import tools as tools
 
 def naive_bayesian_train(X,y):
@@ -15,7 +15,7 @@ def naive_bayesian_train(X,y):
 def naive_bayesian_predict(model, X):
     return model.predict(X)
 
-def display_result(model):
+def display_result(model, X_train):
     #Storing the number of times each token occurs in a True article
     true_token_count = model.feature_count_[0, :]
 
@@ -32,8 +32,7 @@ def display_result(model):
     tokens['fake/true ratio'] = tokens.fake / tokens.true
     tokens.sort_values('fake/true ratio', ascending=False).head(10)
 
-if __name__ == "__main__":
-    preprocess.override_dir("../")
+def test_run():
     X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test()
 
     print("\nTesting Naive Bayesian Classifier ...\n")
@@ -44,4 +43,7 @@ if __name__ == "__main__":
     tools.display_prediction_scores(y_test,y_pred)
     tools.write_metrics_to_file(y_test,y_pred,"NaiveBayes")
     tools.plot_confusion_matrix(y_test,y_pred,"NaiveBayes", True)
+
+if __name__ == "__main__":
+    test_run()
 
