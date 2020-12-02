@@ -25,4 +25,6 @@ if __name__ == "__main__":
     y_pred = decision_tree_predict(model, X_test)
 
     tools.display_prediction_scores(y_test,y_pred)
+    tools.write_metrics_to_file(y_test,y_pred,"DecisionTree")
+    tools.plot_confusion_matrix(y_test,y_pred,"DecisionTree", True)
 

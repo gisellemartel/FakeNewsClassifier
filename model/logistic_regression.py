@@ -24,4 +24,6 @@ if __name__ == "__main__":
     y_pred = logistic_regression_predict(model, X_test)
 
     tools.display_prediction_scores(y_test,y_pred)
+    tools.write_metrics_to_file(y_test,y_pred,"LogisticRegression")
+    tools.plot_confusion_matrix(y_test,y_pred,"LogisticRegression", True)
 
