@@ -44,6 +44,3 @@ def test_run():
         tools.write_metrics_to_file(y_test,y_pred,"RandomForest")
         tools.plot_confusion_matrix(y_test,y_pred,"RandomForest", True)
         tools.plot_feature_importances(X_train, model[0].best_estimator_, "RandomForest", True)
-
-if __name__ == "__main__":
-    test_run()

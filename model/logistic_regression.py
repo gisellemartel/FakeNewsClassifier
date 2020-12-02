@@ -26,7 +26,4 @@ def test_run():
     tools.write_metrics_to_file(y_test,y_pred,"LogisticRegression")
     tools.plot_confusion_matrix(y_test,y_pred,"LogisticRegression", True)
 
-if __name__ == "__main__":
-    test_run()
-
 

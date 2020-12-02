@@ -43,7 +43,3 @@ def test_run():
     tools.display_prediction_scores(y_test,y_pred)
     tools.write_metrics_to_file(y_test,y_pred,"NaiveBayes")
     tools.plot_confusion_matrix(y_test,y_pred,"NaiveBayes", True)
-
-if __name__ == "__main__":
-    test_run()
-

@@ -28,6 +28,3 @@ def test_run():
     tools.plot_confusion_matrix(y_test,y_pred,"DecisionTree", True)
     tools.plot_feature_importances(X_train, model, "DecisionTree", True)
 
-if __name__ == "__main__":
-    test_run()
-
