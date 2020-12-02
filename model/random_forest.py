@@ -33,14 +33,15 @@ def random_forest_predict(models, X):
 def test_run():
     X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test()
 
-    print("\nTesting Random Forest Classifier ...\n")
+    while(input("Would you like to run the Random Forest Classifier? select y to run and any other key otherwise") == 'y'):
+        print("\nTesting Random Forest Classifier ...\n")
 
-    model = random_forest_train(X_train, y_train, [50, 60, 70])
-    Y_pred = random_forest_predict(model, X_test)
+        model = random_forest_train(X_train, y_train, [50, 60, 70])
+        Y_pred = random_forest_predict(model, X_test)
 
-    # TODO: should print result for all depths
-    for y_pred in Y_pred:
-        tools.display_prediction_scores(y_test,y_pred)
-        tools.write_metrics_to_file(y_test,y_pred,"RandomForest")
-        tools.plot_confusion_matrix(y_test,y_pred,"RandomForest", True)
-        tools.plot_feature_importances(X_train, model[0].best_estimator_, "RandomForest", True)
+        # TODO: should print result for all depths
+        for y_pred in Y_pred:
+            tools.display_prediction_scores(y_test,y_pred)
+            tools.write_metrics_to_file(y_test,y_pred,"RandomForest")
+            tools.plot_confusion_matrix(y_test,y_pred,"RandomForest", True)
+            tools.plot_feature_importances(X_train, model[0].best_estimator_, "RandomForest", True)

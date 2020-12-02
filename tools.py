@@ -22,17 +22,19 @@ def display_prediction_scores(test,prediction):
     jacccard = sklearn.metrics.jaccard_score(test,prediction)
     mean_sqr_err = np.sqrt(mean_squared_error(test, prediction))
 
+    print("Printing metrics...")
     print("mean squared error: {:.2f}%".format(mean_sqr_err*100))
     print("accuracy: {:.2f}%".format(accuracy*100))
     print("recall: {:.2f}%".format(recall*100))
     print("precision: {:.2f}%".format(precision*100))
     print("f1: {:.2f}%".format(f1*100))
     print("jacccard: {:.2f}%".format(jacccard*100))
+    print()
 
 def write_metrics_to_file(test, prediction, classifier_name):
     precision, recall, fscore, support = score(test, prediction)
     file_name = '{}{}/metrics.txt'.format(RESULTS_DIR,classifier_name)
-    print(file_name)
+    print("Writing metrics to file {}...".format(file_name))
     with open(file_name, 'w') as file:
         file.write('False Precision : {:.2f}\n'.format(precision[0]))
         file.write('False Recall : {:.2f}\n'.format(recall[0]))
@@ -40,8 +42,10 @@ def write_metrics_to_file(test, prediction, classifier_name):
         file.write('True Precision : {:.2f}\n'.format(precision[1]))
         file.write('True Recall : {:.2f}\n'.format(recall[1]))
         file.write('True fscore : {:.2f}\n'.format(fscore[1]))
+    print()
 
 def plot_confusion_matrix(test, prediction, classifier_name, savefig=False):
+    print("Plotting confusion matrix for {} Classifier...".format(classifier_name))
     plt.figure()
     conf_matrix = sklearn.metrics.confusion_matrix(test, prediction)
     labels =  np.array([[conf_matrix[0][0],conf_matrix[0][1]],[conf_matrix[1][0],conf_matrix[1][1]]])
@@ -54,12 +58,17 @@ def plot_confusion_matrix(test, prediction, classifier_name, savefig=False):
     plt.gca().yaxis.set_ticklabels(['Real', 'Fake'])
     
     if savefig:
-        plt.savefig('{}{}/confusion_matrix.png'.format(RESULTS_DIR,classifier_name))
+        file_name = '{}{}/confusion_matrix.png'.format(RESULTS_DIR,classifier_name)
+        print("Saving confusion matrix for {} Classifier to file {}...".format(classifier_name, file_name))
+        plt.savefig(file_name)
 
 def plot_feature_importances(X, estimator, classifier_name, savefig=False):
+    print("Plotting feature importances for {} Classifier..".format(classifier_name))
     plt.figure()
     feature_importances = pd.Series(estimator.feature_importances_, index=X.columns)
     feature_importances.nlargest(25).plot(kind='barh')
     plt.title("Feature importances for top 25 words")
     if savefig:
-        plt.savefig('{}{}/feature_importances.png'.format(RESULTS_DIR,classifier_name))
+        file_name = '{}{}/feature_importances.png'.format(RESULTS_DIR,classifier_name)
+        print("Saving feature importances for {} Classifier to file {}...".format(classifier_name, file_name))
+        plt.savefig(file_name)
