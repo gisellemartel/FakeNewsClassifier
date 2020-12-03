@@ -189,3 +189,20 @@ def plot_estimator_scores(name,trn_scores,test_scores,savefig=False):
         file_name = '{}{}/scores_plot.png'.format(RESULTS_DIR,name)
         print("Saving estimator scores for {} Classifier to file {}...".format(name, file_name))
         plt.savefig(file_name)
+
+def display_result(model, X_train):
+    #Storing the number of times each token occurs in a True article
+    true_token_count = model.feature_count_[0, :]
+
+    #Storing the number of times each token appears in a Fake article
+    fake_token_count = model.feature_count_[1, :]
+
+    #create a dataframe out of the new data
+    tokens = pd.DataFrame({'token':X_train.columns, 'REAL':true_token_count, 'FAKE':fake_token_count}).set_index('token')
+    tokens['REAL'] = tokens.REAL + 1 #avoid division by 0 when doing frequency calculations
+    tokens['FAKE'] = tokens.FAKE + 1
+    tokens['REAL'] = tokens.REAL / model.class_count_[0]
+    tokens['FAKE'] = tokens.FAKE / model.class_count_[1]
+
+    tokens['fake/real ratio'] = tokens.FAKE / tokens.REAL
+    tokens.sort_values('fake/real ratio', ascending=False).head(10)

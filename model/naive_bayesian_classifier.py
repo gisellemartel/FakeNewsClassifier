@@ -1,5 +1,7 @@
 import pandas as pd
+import numpy as np
 import sklearn
+from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import MultinomialNB
 
 import sys
@@ -7,39 +9,67 @@ sys.path.insert(1, '../')
 
 import tools as tools
 
-def naive_bayesian_train(X,y):
-    model = MultinomialNB()
+def naive_bayesian_train(X,y,a,f):
+    print("Fitting data to NaiveBayes Classifier, this may take a while...")
+    model = MultinomialNB(alpha=a, fit_prior=f)
     model.fit(X, y)
     return model
 
 def naive_bayesian_predict(model, X):
     return model.predict(X)
 
-def display_result(model, X_train):
-    #Storing the number of times each token occurs in a True article
-    true_token_count = model.feature_count_[0, :]
+def naive_bayes_hyperparam_search(X, y, A, F):
+    estimators = []
+    highest_accuracy = 0
+    best_estimator = None
+    best_hyperparams = ()
+    # find the best accuracy from the selection of hyperparams
+    for a in A:
+        for f in F:
+            estimator = naive_bayesian_train(X,y,a,f)
+            estimators.append(estimator)
+            y_pred = naive_bayesian_predict(estimator,X)
 
-    #Storing the number of times each token appears in a Fake article
-    fake_token_count = model.feature_count_[1, :]
+            # calculate the accuracy
+            acc = accuracy_score(y,y_pred)*100
+            print("{:.1f}% training accuracy for alpha={:.3f} fit_prior={}".format(acc,a,f))
 
-    #create a dataframe out of the new data
-    tokens = pd.DataFrame({'token':X_train.columns, 'true':true_token_count, 'fake':fake_token_count}).set_index('token')
-    tokens['true'] = tokens.true + 1 #avoid division by 0 when doing frequency calculations
-    tokens['fake'] = tokens.fake + 1
-    tokens['true'] = tokens.true / model.class_count_[0]
-    tokens['fake'] = tokens.fake / model.class_count_[1]
+            if acc > highest_accuracy:
+                highest_accuracy = acc
+                best_estimator = estimator
+                best_hyperparams = {"alpha": a, "fit_prior": f}
 
-    tokens['fake/true ratio'] = tokens.fake / tokens.true
-    tokens.sort_values('fake/true ratio', ascending=False).head(10)
+    return estimators, highest_accuracy, best_estimator, best_hyperparams
 
 def test_run(X_train, X_test, y_train, y_test):
     print("\nTesting Naive Bayesian Classifier ...\n")
-
-    model = naive_bayesian_train(X_train, y_train)
-    y_pred = naive_bayesian_predict(model, X_test)
     
-    tools.plot_predicted_labels(y_test, y_pred, "NaiveBayes", True)
+    # set the hyperparams
+    A = np.linspace(0.05,1,12)
+    F = [True, False]
 
+    # perform hyperparam search
+    estimators, accuracy, best_estimator, hyperparams = naive_bayes_hyperparam_search(X_train, y_train, A,F)
+
+    # calculate the training and testing scores and plot the result
+    trn_scores, test_scores = tools.calculate_estimator_scores([X_train, X_test, y_train, y_test], estimators)
+
+    # calculate model overfitting
+    overfitting = tools.determine_overfitting(trn_scores,test_scores)
+    print("\nNaive Bayes overfitting: {:.3f}\n".format(overfitting))
+    
+    # plot the scores of each estimator
+    tools.plot_estimator_scores("NaiveBayes",trn_scores,test_scores,True)
+    
+    # display details of best estimator
+    tools.display_best_estimator(accuracy, "NaiveBayes", hyperparams)
+
+    # use best estimator to make predictions
+    y_pred = naive_bayesian_predict(best_estimator, X_test)
+
+    tools.plot_predicted_labels(y_test, y_pred, "NaiveBayes", True)
     tools.display_prediction_scores(y_test,y_pred)
     tools.write_metrics_to_file(y_test,y_pred,"NaiveBayes")
     tools.plot_confusion_matrix(y_test,y_pred,"NaiveBayes", True)
+
+    tools.display_result(best_estimator, X_train)

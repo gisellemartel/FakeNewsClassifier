@@ -53,7 +53,7 @@ def test_run(X_train, X_test, y_train, y_test):
 
     # set the hyperparams
     D = np.linspace(1,1000,20)
-    N = np.linspace(100,2000,100)
+    N = np.linspace(1,10,1, dtype="int32")
 
     # perform hyperparam search
     estimators, accuracy, best_estimator, hyperparams = random_forest_hyperparam_search(X_train, y_train, D, N)
@@ -63,19 +63,19 @@ def test_run(X_train, X_test, y_train, y_test):
 
     # calculate model overfitting
     overfitting = tools.determine_overfitting(trn_scores,test_scores)
-    print("\nDecision Tree overfitting: {:.3f}\n".format(overfitting))
+    print("\nRandom Forest overfitting: {:.3f}\n".format(overfitting))
     
     # plot the scores of each estimator
-    tools.plot_estimator_scores("DecisionTree",trn_scores,test_scores,True)
+    tools.plot_estimator_scores("RandomForest",trn_scores,test_scores,True)
     
     # display details of best estimator
-    tools.display_best_estimator(accuracy, "DecisionTree", hyperparams)
+    tools.display_best_estimator(accuracy, "RandomForest", hyperparams)
 
     # use best estimator to make predictions
     y_pred = random_forest_predict(best_estimator, X_test)
 
-    tools.plot_predicted_labels(y_test, y_pred, "DecisionTree", True)
+    tools.plot_predicted_labels(y_test, y_pred, "RandomForest", True)
     tools.display_prediction_scores(y_test,y_pred)
-    tools.write_metrics_to_file(y_test,y_pred,"DecisionTree")
-    tools.plot_confusion_matrix(y_test,y_pred,"DecisionTree", True)
+    tools.write_metrics_to_file(y_test,y_pred,"RandomForest")
+    tools.plot_confusion_matrix(y_test,y_pred,"RandomForest", True)
 

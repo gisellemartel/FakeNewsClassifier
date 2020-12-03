@@ -8,6 +8,7 @@ sys.path.insert(1, '../')
 import tools as tools
 
 def logistic_regression_train(X, y, c):
+    print("Fitting data to LogisticRegression Classifier, this may take a while...")
     model = sklearn.linear_model.LogisticRegression(random_state=0, max_iter=100, C=c)
     model.fit(X,y)
     return model

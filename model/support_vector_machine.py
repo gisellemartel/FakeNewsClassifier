@@ -7,9 +7,9 @@ sys.path.insert(1, '../')
 
 import tools as tools
 
-def support_vector_machine_train(X,y,c,g):
+def support_vector_machine_train(X,y,c,g,k):
     print("Fitting data to SVC, this may take a while...")
-    svc = SVC(kernel='rbf', C=c, gamma=g, max_iter=100, random_state=0)
+    svc = SVC(kernel=k, C=c, gamma=g, max_iter=100, random_state=0)
     svc.fit(X, y)
     return svc
 
@@ -17,7 +17,7 @@ def support_vector_machine_predict(svc, X):
     return svc.predict(X)
 
 #  performs hyperparam search on SVC estimators, returns the best result
-def svc_hyperparam_search(X, y, C, G):
+def svc_hyperparam_search(X, y, C, G, K):
     estimators = []
     highest_accuracy = 0
     best_estimator = None
@@ -25,18 +25,19 @@ def svc_hyperparam_search(X, y, C, G):
     # find the best accuracy from the selection of hyperparams
     for c in C:
         for g in G:
-            svc = support_vector_machine_train(X,y,c,g)
-            estimators.append(svc)
-            y_pred = support_vector_machine_predict(svc,X)
+            for k in K:
+                svc = support_vector_machine_train(X,y,c,g,k)
+                estimators.append(svc)
+                y_pred = support_vector_machine_predict(svc,X)
 
-            # calculate the accuracy
-            a = accuracy_score(y,y_pred)*100
-            print("{:.1f}% training accuracy for C={:.3f} gamma={:.3f}".format(a, c, g))
+                # calculate the accuracy
+                a = accuracy_score(y,y_pred)*100
+                print("{:.1f}% training accuracy for C={:.3f} gamma={:.3f} kernel={}".format(a,c,g,k))
 
-            if a > highest_accuracy:
-                highest_accuracy = a
-                best_estimator = svc
-                best_hyperparams = {"c": c, "gamma": g}
+                if a > highest_accuracy:
+                    highest_accuracy = a
+                    best_estimator = svc
+                    best_hyperparams = {"c": c, "gamma": g}
 
     return estimators, highest_accuracy, best_estimator, best_hyperparams
 
@@ -46,9 +47,10 @@ def test_run(X_train, X_test, y_train, y_test):
     # set the hyperparams
     C = np.logspace(-4,4,6)
     G = np.logspace(-4,4,6)
+    K = ["rbf", "linear"]
 
     # perform hyperparam search
-    estimators, accuracy, best_estimator, hyperparams = svc_hyperparam_search(X_train, y_train, C, G)
+    estimators, accuracy, best_estimator, hyperparams = svc_hyperparam_search(X_train, y_train, C, G, K)
 
     # calculate the training and testing scores and plot the result
     trn_scores, test_scores = tools.calculate_estimator_scores([X_train, X_test, y_train, y_test], estimators)

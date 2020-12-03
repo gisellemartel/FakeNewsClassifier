@@ -9,6 +9,7 @@ sys.path.insert(1, '../')
 import tools as tools
 
 def decision_tree_train(X, y, d):
+    print("Fitting data to DecisionTree, this may take a while...")
     model = sklearn.tree.DecisionTreeClassifier(max_depth=d,random_state=0)
     model.fit(X,y)
     return model
