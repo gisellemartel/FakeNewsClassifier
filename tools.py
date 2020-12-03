@@ -51,7 +51,7 @@ def plot_predicted_labels(test, prediction, classifier_name, savefig=False):
 '''
 def display_best_estimator(accuracy, estimator, hyperparams):
     print("Best {} estimator accuracy: {:.3f}%".format(estimator, accuracy))
-    print("Hyperparams:\n")
+    print("Hyperparams:")
 
     for param in hyperparams:
         print("{}: {}".format(param, hyperparams[param]))
@@ -169,8 +169,8 @@ def plot_estimator_scores(name,trn_scores,test_scores,savefig=False):
     plt.tick_params(axis='x',which='both',bottom=False,top=False,labelbottom=False)
     plt.ylabel("score")
     
-    plt.text(0, 0.1, "train = {:.3f}".format(trn_score), fontsize=10, c="blue")
-    plt.text(0, 0.2, "test = {:.3f}".format(test_score), fontsize=10, c='purple')
+    plt.text(40, 0.1, "train = {:.3f}".format(trn_score), fontsize=10, c="blue")
+    plt.text(40, 0.2, "test = {:.3f}".format(test_score), fontsize=10, c='purple')
 
     plt.plot(x,trn_scores, label="train", c="blue", marker="o")
     plt.plot(x,test_scores, label="test", c="purple",  marker="o")
@@ -182,7 +182,7 @@ def plot_estimator_scores(name,trn_scores,test_scores,savefig=False):
 
     plt.ylim([0,1.1])
     
-    plt.title( "{} scores for all hyperparam combinations".format(name))
+    plt.title( "{} Scores for all Hyperparameter Combinations".format(name))
     plt.legend()
 
     if savefig:

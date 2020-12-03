@@ -33,7 +33,7 @@ def logisitic_regression_hyperparam_search(X, y, C):
         if a > highest_accuracy:
             highest_accuracy = a
             best_estimator = estimator
-            best_hyperparams = {"c": c}
+            best_hyperparams = {"C": c}
 
     return estimators, highest_accuracy, best_estimator, best_hyperparams
     
@@ -42,8 +42,7 @@ def test_run(X_train, X_test, y_train, y_test):
     print("\nTesting Logistic Regression Classifier ...\n")
 
   # set the hyperparams
-    C = np.logspace(-2,3,6)
-    G = np.logspace(-2,3,6)
+    C = np.logspace(-4,4,6)
 
     # perform hyperparam search
     estimators, accuracy, best_estimator, hyperparams = logisitic_regression_hyperparam_search(X_train, y_train, C)
@@ -53,7 +52,7 @@ def test_run(X_train, X_test, y_train, y_test):
 
     # calculate model overfitting
     overfitting = tools.determine_overfitting(trn_scores,test_scores)
-    print("Logistic Regression overfitting: {:.3f}\n".format(overfitting))
+    print("\nLogistic Regression overfitting: {:.3f}\n".format(overfitting))
     
     # plot the scores of each estimator
     tools.plot_estimator_scores("LogisticRegression",trn_scores,test_scores,True)

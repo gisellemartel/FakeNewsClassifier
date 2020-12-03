@@ -44,8 +44,8 @@ def test_run(X_train, X_test, y_train, y_test):
     print("\nTesting SVM Classifier ...\n")
 
     # set the hyperparams
-    C = np.logspace(-2,3,6)
-    G = np.logspace(-2,3,6)
+    C = np.logspace(-4,4,6)
+    G = np.logspace(-4,4,6)
 
     # perform hyperparam search
     estimators, accuracy, best_estimator, hyperparams = svc_hyperparam_search(X_train, y_train, C, G)
@@ -55,7 +55,7 @@ def test_run(X_train, X_test, y_train, y_test):
 
     # calculate model overfitting
     overfitting = tools.determine_overfitting(trn_scores,test_scores)
-    print("SVC overfitting: {:.3f}\n".format(overfitting))
+    print("\nSVC overfitting: {:.3f}\n".format(overfitting))
     
     # plot the scores of each estimator
     tools.plot_estimator_scores("SVC",trn_scores,test_scores,True)
