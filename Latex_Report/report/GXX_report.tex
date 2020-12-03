@@ -5,8 +5,6 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage[pagebackref=true,breaklinks=true,colorlinks,bookmarks=false]{hyperref}
-\graphicspath{ {./} }
-
 \def\GroupID{G01} % <------- ENTER YOUR COMP 6321 group number here
 
 \begin{document}
@@ -25,7 +23,7 @@
 The term “fake news” mainly refers to false or inaccurate information that is mistakenly or inadvertently created or spread. Fake news may have some hints of truth, but lack any contextualizing details. They may not include any verifiable facts or sources or may include basic verifiable facts that are written using deliberately inflammatory language that leaves out pertinent details or only presents one viewpoint. Our project aims to analyze and classify a list of news articles from 2 different datasets containing fake news and Real news entries. Entries in both datasets have a similar structure and are of the following form:   
 
 \begin{center}
-\includegraphics[width=\linewidth]{project_guide/report/dt_example.png}
+\includegraphics[width=\linewidth]{Latex_Report/report/dt_example.png}
 \end{center}
 
 The datasets were retrieved from a similar experiment conducted by (insert author here) however, the implementation details of the experiment have been thoroughly modified and expanded. The basic organization of the datasets include a title for each article, the text of the article, its subject and its date. Our project aims to classify words from these articles into two categories, namely a fake news category and a true news category by predicting the probability that a particular word is in present in either a fake or true news article. This classification and prediction is to be made using machine learning models that we have learned in class, namely a Support Vector Machine Classifier, a Random Forest Classifier, a Decision Tree Classifier, a Multinomial Naive Bayes Classifier, a Logistic regression Classifier, and A convolutional neural network. \\
@@ -40,55 +38,88 @@ The results we aim to achieve are in the form of detailed graphs and confusion m
 
 The first step we had to take to prepare for our experiment was to preprocess our data. This was an important step given that we needed maximize prediction performance by getting rid of empty data cells as well as formatting all entries in each column of both datasets in a similar manner. Preprocessing the data involved parsing both datasets, clearing out empty data cells, formatting the date columns in a uniform manner for all cells. It also involved assigning each dataset their respective labels of fake vs true news. Once this was done  both files were joined together to create one big dataset that we later used in our tokenization process. Tokenization was a necessary process that allowed us to extract all unique words from the joined dataset in preparation for splitting the data into training and testing components. We opted to split the data into a 70\% training set and a 30\% testing set as it seemed ideal to have our training data consisting of more than double that of the testing data. Following the split we generated a document-term matrix for each of the training and testing data and converted both the testing and training datasets into dataframes that we later used in our models. \\
 
-The first model we  worked on was the Multinomial Naive Bayesian model given that it is suitable for classification of discrete features such as the tokenized text in our preprocessed dataset. We used the corresponding sklearn library to generate our model and fit our data to that model and then made the predictions, generated a confusion matrix and displayed a graph as shown below:
+The first model we worked on was the Multinomial Naive Bayesian model given that it is suitable for classification of discrete features such as the tokenized text in our preprocessed dataset. We started by performing a hyper parameter search that allowed us to choose the best accuracy to fit our data. We used the corresponding sklearn library to generate our model and then calculated the training and testing scores as well as the overfitting before we could plot our data. Next, we picked the best estimator we found and made the predictions, generated a confusion matrix and displayed a graph as shown in Figure~\ref{first_figure}. The model successfully achieved an accuracy of 92.33\% and a mean squared error of 27.7\% and a precision of 94.25\%. 
 
-\begin{center}
-\includegraphics[width=\linewidth]{}
-\end{center}
+\begin{figure}[h]
+   \begin{center}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/NB/confusion_matrix.png}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/NB/scores_plot_NB.png}
+   \end{center}
+        \vspace*{-8mm}
+        \caption{\label{first_figure}}
+\end{figure}
 
-The model successfully achieved an accuracy of (insert accuracy) and a confusion matrix that helped in visualizing the classification results of this model.\\ 
+Next, we worked on the Decision Tree classifier with the goal of creating a supervised learning model that predicts the correct label for a particular word by learning simple decision rules inferred from the training data features. A hyper parameter search using various max\_depth values was conducted to obtain the best accuracy possible and to help us in generating the training and testing accuracy scores. The model's overfitting value was also calculated and the best estimator was then used to generate the predictions and display the confusion matrix as well as the graph shown in Figure~\ref{second_figure} below. The model successfully achieved an accuracy of 99.22\%, a mean squared error of 8.79\% and a precision of 99.03\%.
+ 
+\begin{figure}[h]
+   \begin{center}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/DT/confusion_matrix.png}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/DT/scores_plot.png}
+   \end{center}
+        \vspace*{-8mm}
+        \caption{\label{second_figure}}
+\end{figure}
 
-Next, we worked on the Decision Tree classifier with the goal of creating a supervised learning model that predicts the correct label for a particular word by learning simple decision rules inferred from the training data features. We used the corresponding Sklearn library to create our model and passed a max\_depth parameter of 5000 and fit our data to it in order to generate the necessary predictions shown below: 
+Next, we worked on the Random Forest classifier that fits a number of decision tree classifiers on various sub-samples of our dataset and uses averaging to improve the predictive accuracy while also controlling over-fitting to a satisfying degree. A hyper parameter search was conducted to find the best maximum depth and number of estimator values that provide us with the highest possible accuracy for our model. We then calculated the training and testing score values and determined the overfitting before generating a confusion matrix, a plot for the scores of each estimator and a plot displaying the feature importances for the top 25 words all shown in Figure~\ref{third_figure} below. The model successfully achieved an accuracy of 94.4\%, a mean squared error of 23.6\% and a precision of 93.99\%.\\ 
 
-\begin{center}
-\includegraphics[width=\linewidth]{}
-\end{center}
+\begin{figure}[h]
+   \begin{center}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/RF/confusion_matrix.png}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/RF/scores_plot.png}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/RF/feature_importances.png}
+   \end{center}
+        \vspace*{-5mm}
+        \caption{\label{third_figure}}
+\end{figure}
 
-The model successfully achieved an accuracy of (insert accuracy) and the confusion matrix shown above that helped in visualizing the classification results of this model.\\ 
+A Support Vector Machine model, which is a form of supervised learning, was then used to further help us in our quest for category prediction and classification. This model had an advantage of being memory efficient in the sense that it uses a subset of training points in the decision function called support vectors. In terms of the parameters used, we performed a hyper parameter search over 2 types of kernels, namely a Gaussian kernel of type 'rbf' and a linear kernel, as well as various values for C and gamma. This allowed us to obtain the best estimator to calculate the training and testing scores as well as to determine overfitting and perform prediction calculations. A plot for the scores of each estimator as well as a confusion matrix shown in Figure~\ref{fourth_figure} were generated to help us visualize our results. The model successfully achieved an accuracy of 90.9\%, a mean squared error of 30.04\% and a precision of 91.24\%.
 
-Next, we worked on the Random Forest classifier that fits a number of decision tree classifiers on various sub-samples of the dataset and uses averaging to improve the predictive accuracy while controlling over-fitting to a satisfying degree. We used the corresponding Sklearn library to generate our model and with the help of the GridSearchCV method we performed an exhaustive search over specified parameter values for our estimator. The parameter values used, namely the depth and the number of estimators, were chosen experimentally to ensure optimal performance of our model. Next we fit our data to the model and then made the predictions shown below:
+\begin{figure}[h]
+   \begin{center}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/SVC/confusion_matrix.png}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/SVC/scores_plot.png}
+   \end{center}
+        \vspace*{-5mm}
+        \caption{\label{fourth_figure}}
+\end{figure}
 
-\begin{center}
-\includegraphics[width=\linewidth]{}
-\end{center}
+Next, we worked on a Logistic Regression model that we used to predict the probability of our categorically dependent tokenized text. We used the corresponding Sklearn library to generate our model and fit our data to it using hyper parameters obtained via a hyper parameter search for values of C. The search allowed us to obtain the best possible accuracy, calculate the training and testing scores as well as to determine overfitting and perform prediction calculations. The model worked in such a way that it treated our tokenized data as binary variables that contain data coded as 1 (in our case Real) or 0 (in our case "fake") and used this data to make predictions. We subsequently generated a graph of each of the training and testing scores as well as a confusion matrix (Figure~\ref{fifth_figure}) that helped us visualize the result. The model successfully achieved an accuracy of 99.08\%, a mean squared error of 9.55\% and a precision of 99.14\%. \\
 
-The model successfully achieved an accuracy of (insert accuracy) and the confusion matrix shown above helped in visualizing the classification results of this model.\\ 
+\begin{figure}[h]
+   \begin{center}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/LR/confusion_matrix.png}
+        \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/LR/scores_plot.png}
+   \end{center}
+        \vspace*{-5mm}
+        \caption{\label{fifth_figure}}
+\end{figure}
 
-A Support Vector Machine model, which is a form of supervised learning, was then used to further help us in our quest for category prediction and classification. This model had an advantage of being memory efficient in the sense that it uses a subset of training points in the decision function called support vectors. In terms of the parameters used, we chose a Gaussian kernel of type 'rbf' and decided to implement a custom hyper parameter search that allowed us to obtain the best possible parameters for this model. We report the accuracy of this model and a confusion matrix that helps visualize the classification results obtained using this model: 
-
-\begin{center}
-\includegraphics[width=\linewidth]{}
-\end{center}
-
-The model successfully achieved an accuracy of (insert accuracy) and the confusion matrix shown above that helped in visualizing the classification results of this model.\\ 
-
-Next, we worked on a Logistic Regression model that we used to predict the probability of our categorically dependent variables. We used the corresponding Sklearn library to generate our model and fit our data to it. The model worked in such a way that it treated our tokenized data as binary variables that contain data coded as 1 (in our case Real) or 0 (in our case "fake") and used this data to make predictions. We reported the accuracy of this model and a confusion matrix obtained: 
-
-\begin{center}
-\includegraphics[width=\linewidth]{}
-\end{center}
-
-The model successfully achieved an accuracy of (insert accuracy) and the confusion matrix shown above that helped in visualizing the classification results of this model.\\ 
 
 Finally, a neural network was constructed 
 
 %------------------------------------------------------------------------
 \section{Conclusions}
 
-Summarize what you could and could not conclude based on your experiments.
+\textcolor{blue}{Summarize what you could and could not conclude based on your experiments.
+The ”References” section (bibliography) is optional. If you cite any books, websites, or academic papers, then you can add them to bibliography.bib and cite them in this re- port. Otherwise delete the references section.}
 
-The "References" section (bibliography) is optional. If you cite any books, websites, or academic papers, then you can add them to bibliography.bib and cite them in this report. Otherwise delete the references section.
-
+\begin{table*}[!hb]\centering
+   \begin{center}
+   \begin{tabular}{|l|c|c|c|c|c|}
+   \hline
+    Classifier & Accuracy & Mean Squared Error & Precision & Recall & fscore\\
+   \hline\hline
+   Naive Bayes & 92.33\% & 27.7\% & 94.25\% & 90.87\% & 92.53\% \\
+   Decision Tree & 99.22\% & 8.79\% & 99.03\% & 99.48\% & 99.26\% \\
+   Random forest & 94.40\% & 23.60\% & 93.99\% & 95.41\% & 94.69\%\\
+   Support Vector Machine & 90.90\% & 30.04\% & 91.24\% & 91.51\% & 91.38\% \\
+   Logistic Regression & 99.08\% & 9.55\% & 99.14\% & 99.10\% & 99.13\% \\
+   Central Neural Network & 0.00\% & 0.00\% & 0.00\% & 0.00\% & 0.00\% \\
+   \hline
+   \end{tabular}
+   \end{center}
+   \caption{Summary of Model Results\label{first_table}}
+\end{table*}
 
 {\small
 \bibliographystyle{cvpr_bibstyle}
@@ -104,7 +135,7 @@ The "References" section (bibliography) is optional. If you cite any books, webs
 \section*{Appendix: Extra Results (Optional)}
 
 % DELETE THIS TEXT
-If you want to include extra more detailed results that did not fit within the main report, include them here. Or, you can just delete this example section.
+\textcolor{blue}{If you want to include extra more detailed results that did not fit within the main report, include them here. Or, you can just delete this example section.}
 
 %-------------------------------------------------------------------------
 \section*{Appendix: Examples of \LaTeX}
@@ -114,8 +145,7 @@ If you want to include extra more detailed results that did not fit within the m
 % and it is good LaTeX practice to put tildes between 
 
 % DELETE THIS TEXT
-This section contains some examples of \LaTeX~to help you get started.
-(You should delete this section in the final report.)
+
 This is a reference to Table~\ref{first_table} and Table~\ref{second_table}.
 This is a reference to Figure~\ref{first_figure} and Figure~\ref{second_figure}.
 This is a citation \cite{breiman2001statistical} and this is
@@ -123,74 +153,6 @@ multiple citations \cite{breiman2001statistical,bishop2006pattern}.
 This is \textit{italics} and \textbf{bold} text.
 This is a formula $\sum_{i=1}^N (y_i - \hat{y}_i(\mathbf{x}))^2$
 that is inline with the text (`text style') and this is a
-formula that is displayed separately (`display style'):
-$$
-\sum_{i=1}^N (y_i - \hat{y}_i(\mathbf{x}))^2
-$$
-These are formulas with an associated equation number
-\begin{align}
-   \mathbf{x} = \begin{bmatrix}
-      x_1, x_2, \ldots, x_N
-   \end{bmatrix}^T    \label{xvec}\\
-   \boldsymbol{\phi} = \begin{bmatrix}
-      \phi_1, \phi_2, \ldots, \phi_M
-   \end{bmatrix}^T    \label{phivec}
-\end{align}
-and we can now refer back to~\eqref{xvec} or to ~\eqref{phivec} like so.
-
-
-
-% DELETE THIS TABLE
-\begin{table}
-   \begin{center}
-   \begin{tabular}{|l|c|c|}
-   \hline
-   Method & Ultra-Clustering & Random Jungles \\
-   \hline\hline
-   Theirs & Works OK & All your base\\
-   Yours & Works better & are belong to us!\\
-   Ours & Works best! & I can haz publication?\\
-   \hline
-   \end{tabular}
-   \end{center}
-   \caption{This is the caption of a column-width table.\label{first_table}}
-\end{table}
-
-% DELETE THIS TABLE
-\begin{table*}
-   \begin{center}
-   \begin{tabular}{|l|c|c|c|}
-   \hline
-   Method & Good? & Bad? & So-so? \\
-   \hline\hline
-   Your method & Terrible & Yes, I made sure of it & Star Wars movies \\
-   My supervisor's old method (sigh) & I want Tim Horton's & People in hallway... & ...are talking too loudly \\
-   My proposed method  & Yes, good! & No, I said good! & What? \\
-   \hline
-   \end{tabular}
-   \end{center}
-   \caption{This is the caption of a page-width table.\label{second_table}}
-\end{table*}
-
-
-% DELETE THIS FIGURE
-\begin{figure}
-   \begin{center}
-   \includegraphics[width=\linewidth]{sample_image.png}
-   \end{center}
-      \caption{This is the caption of a column-width figure.\label{first_figure}}
-\end{figure}
-   
-
-% DELETE THIS FIGURE
-\begin{figure*}
-   \begin{center}
-      \includegraphics[width=0.4\linewidth]{sample_image.pdf}
-      \includegraphics[width=0.4\linewidth]{sample_image.pdf}
-   \end{center}
-      \caption{This is the caption of a page-width figure.\label{second_figure}}
-\end{figure*}
-
 
 
 
