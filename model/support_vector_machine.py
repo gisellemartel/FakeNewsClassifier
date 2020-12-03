@@ -32,7 +32,7 @@ def svc_hyperparam_search(X, y, C, G, K):
 
                 # calculate the accuracy
                 a = accuracy_score(y,y_pred)*100
-                print("{:.1f}% training accuracy for C={:.3f} gamma={:.3f} kernel={}".format(a,c,g,k))
+                print("{:.3f}% training accuracy for C={:.3f} gamma={:.3f} kernel={}".format(a,c,g,k))
 
                 if a > highest_accuracy:
                     highest_accuracy = a
@@ -72,5 +72,3 @@ def test_run(X_train, X_test, y_train, y_test):
     tools.display_prediction_scores(y_test,y_pred)
     tools.write_metrics_to_file(y_test,y_pred,"SVC")
     tools.plot_confusion_matrix(y_test,y_pred,"SVC", True)
-
-    tools.display_result(best_estimator, X_train)

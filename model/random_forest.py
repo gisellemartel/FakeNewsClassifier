@@ -39,7 +39,7 @@ def random_forest_hyperparam_search(X, y, D,N):
 
             # calculate the accuracy
             a = accuracy_score(y,y_pred)*100
-            print("{:.1f}% training accuracy for max_depth={:.3f} n_estimators={:.3f}".format(a,d,n))
+            print("{:.3f}% training accuracy for max_depth={:.3f} n_estimators={:.3f}".format(a,d,n))
 
             if a > highest_accuracy:
                 highest_accuracy = a
@@ -78,6 +78,3 @@ def test_run(X_train, X_test, y_train, y_test):
     tools.display_prediction_scores(y_test,y_pred)
     tools.write_metrics_to_file(y_test,y_pred,"RandomForest")
     tools.plot_confusion_matrix(y_test,y_pred,"RandomForest", True)
-
-    tools.display_result(best_estimator, X_train)
-

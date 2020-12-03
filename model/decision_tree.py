@@ -30,7 +30,7 @@ def decision_tree_hyperparam_search(X, y, D):
 
         # calculate the accuracy
         a = accuracy_score(y,y_pred)*100
-        print("{:.1f}% training accuracy for max_depth={:.3f}".format(a,d))
+        print("{:.3f}% training accuracy for max_depth={:.3f}".format(a,d))
 
         if a > highest_accuracy:
             highest_accuracy = a
@@ -68,9 +68,3 @@ def test_run(X_train, X_test, y_train, y_test):
     tools.display_prediction_scores(y_test,y_pred)
     tools.write_metrics_to_file(y_test,y_pred,"DecisionTree")
     tools.plot_confusion_matrix(y_test,y_pred,"DecisionTree", True)
-
-    tools.display_result(best_estimator, X_train)
-
-
-
-

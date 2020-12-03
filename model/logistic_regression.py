@@ -29,7 +29,7 @@ def logisitic_regression_hyperparam_search(X, y, C):
 
         # calculate the accuracy
         a = accuracy_score(y,y_pred)*100
-        print("{:.1f}% training accuracy for C={:.3f}".format(a, c))
+        print("{:.3f}% training accuracy for C={:.3f}".format(a, c))
 
         if a > highest_accuracy:
             highest_accuracy = a
@@ -68,6 +68,3 @@ def test_run(X_train, X_test, y_train, y_test):
     tools.display_prediction_scores(y_test,y_pred)
     tools.write_metrics_to_file(y_test,y_pred,"LogisticRegression")
     tools.plot_confusion_matrix(y_test,y_pred,"LogisticRegression", True)
-
-    tools.display_result(best_estimator, X_train)
-

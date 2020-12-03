@@ -32,7 +32,7 @@ def naive_bayes_hyperparam_search(X, y, A, F):
 
             # calculate the accuracy
             acc = accuracy_score(y,y_pred)*100
-            print("{:.1f}% training accuracy for alpha={:.3f} fit_prior={}".format(acc,a,f))
+            print("{:.3f}% training accuracy for alpha={:.3f} fit_prior={}".format(acc,a,f))
 
             if acc > highest_accuracy:
                 highest_accuracy = acc
