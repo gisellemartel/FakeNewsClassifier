@@ -9,7 +9,7 @@ import tools as tools
 
 def support_vector_machine_train(X,y,c,g):
     print("Fitting data to SVC, this may take a while...")
-    svc = SVC(kernel='rbf', C=c, gamma=g, max_iter=10000, random_state=0)
+    svc = SVC(kernel='rbf', C=c, gamma=g, max_iter=100, random_state=0)
     svc.fit(X, y)
     return svc
 
