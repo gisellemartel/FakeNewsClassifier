@@ -96,15 +96,17 @@ def split_and_preprocess(all_tokens, tokens_per_article, all_news):
 
     return X_train, X_test, y_train, y_test
 
-def preprocess_test():
+def preprocess_test(use_full_dataset=False):
     print("\nTesting preprocessing of data...\n")
 
-    fake_news = parse_dataset("Fake_test.csv", "FAKE")
+    fake = "Fake.csv" if use_full_dataset else "Fake_test.csv"
+    real = "True.csv" if use_full_dataset else "True_test.csv"
+    fake_news = parse_dataset(fake, "FAKE")
     print("\nPreview of Fake news Dataset")
     print(fake_news)
     print()
     
-    real_news = parse_dataset("True_test.csv", "REAL")
+    real_news = parse_dataset(real, "REAL")
     print("\nPreview of Real news Dataset")
     print(real_news)
     print()
