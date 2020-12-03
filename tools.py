@@ -170,12 +170,13 @@ def plot_estimator_scores(name,trn_scores,test_scores,savefig=False):
     plt.ylabel("score")
     
     plt.text(0, 0.1, "train = {:.3f}".format(trn_score), fontsize=10, c="blue")
-    plt.text(0, 0.2, "test = {:.3f}".format(test_score), fontsize=10, c='orange')
+    plt.text(0, 0.2, "test = {:.3f}".format(test_score), fontsize=10, c='purple')
 
     plt.plot(x,trn_scores, label="train", c="blue", marker="o")
-    plt.plot(x,test_scores, label="test", c="orange",  marker="o")
+    plt.plot(x,test_scores, label="test", c="purple",  marker="o")
 
     xpos = test_scores.index(test_score)
+    xpos = x[xpos]
 
     plt.plot(xpos, test_score, c='r', marker='x', ms=15)
 

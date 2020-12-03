@@ -7,7 +7,9 @@ import model.naive_bayesian_classifier as NB
 import preprocess as preprocess
 
 if __name__ == "__main__":
-    X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test(True)
+    answer = input("Enter 'm' if you would like to use the mini dataset for testing purposes (results will be inaccurate). Enter any other key to run full dataset: ")
+    
+    X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test(answer != 'm')
     
     while(True):
         inp = input("\nPlease select the classifier you wish to test. Enter q to exit\n0-LogisticRegression\n1-DecisionTree\n2-RandomForest\n3-SVC\n4-NaiveBayes ")
