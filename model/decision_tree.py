@@ -69,6 +69,8 @@ def test_run(X_train, X_test, y_train, y_test):
     tools.write_metrics_to_file(y_test,y_pred,"DecisionTree")
     tools.plot_confusion_matrix(y_test,y_pred,"DecisionTree", True)
 
+    tools.display_result(best_estimator, X_train)
+
 
 
 
