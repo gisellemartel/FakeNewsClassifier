@@ -29,7 +29,7 @@ def decision_tree_hyperparam_search(X, y, D):
 
         # calculate the accuracy
         a = accuracy_score(y,y_pred)*100
-        print("{:.1f}% training accuracy for MaxDepth={:.3f}".format(a,d))
+        print("{:.1f}% training accuracy for max_depth={:.3f}".format(a,d))
 
         if a > highest_accuracy:
             highest_accuracy = a
