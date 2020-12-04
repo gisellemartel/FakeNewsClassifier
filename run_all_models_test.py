@@ -18,7 +18,8 @@ if __name__ == "__main__":
     answer = input("Enter 'm' if you would like to use the mini dataset for testing purposes (results will be inaccurate).\n\nEnter any other key to run full dataset: ")
     
     print("\n" + preprocessing + "\n")
-    X_train, X_test, y_train, y_test, all_tokens = preprocess.preprocess_test(answer != 'm')
+    X_train, X_test, y_train, y_test, cnn_data = preprocess.preprocess(answer != 'm')
+    preprocess.save_to_csv(X_train, X_test, y_train, y_test)
     
     while(True):
         print(selection)
@@ -44,8 +45,8 @@ if __name__ == "__main__":
             print(divider)
             NB.test_run(X_train, X_test, y_train, y_test, answer != 'm')
             print(completed)
-        # elif inp == '5':
-        #     CNN.test_run(X_train, X_test, y_train, y_test)
+        elif inp == '5':
+            CNN.test_run(cnn_data, answer != 'm')
         elif inp == '6':
             print(divider)
             LR.test_run(X_train, X_test, y_train, y_test, answer != 'm')
@@ -57,6 +58,8 @@ if __name__ == "__main__":
             SVC.test_run(X_train, X_test, y_train, y_test, answer != 'm')
             print(divider)
             NB.test_run(X_train, X_test, y_train, y_test, answer != 'm')
+            print(divider)
+            CNN.test_run(cnn_data, answer != 'm')
             print(completed)
         elif inp == 'q':
             print(goodbye)

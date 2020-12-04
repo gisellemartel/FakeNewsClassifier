@@ -17,12 +17,14 @@ import sklearn.model_selection as ms
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 DATA_DIR = "./data/"
+PREPROCESSED_DATA_DIR = DATA_DIR + "preprocessed/"
 
-news_networks = ["CNN", "BBC", "theguardian", "foxnews", "nbcnews", "washingtonpost"]
+news_networks = ["reuters", "CNN", "BBC", "theguardian", "foxnews", "nbcnews", "washingtonpost", "cbcnews", "globalnews", "ctvnews"]
 common_words = ["said", "would", "image", "via"]
 stop_words = list(stopwords.words("english"))
 stop_words.extend(news_networks)
 stop_words.extend(common_words)
+
 
 # parses the dataset from the csv file and sets the correct label
 def parse_dataset(csv_file, label):
@@ -53,7 +55,6 @@ def tokenize(news_data, name):
         words = [word.lower() for word in words if word.isalpha()]
         words = [word for word in words if word not in stop_words and word not in string.punctuation]
             
-        # TODO investigate better solution for tokenization, possibly with pytorch?
         lemmatizer = WordNetLemmatizer()
         words = [lemmatizer.lemmatize(word) for word in words]
         
@@ -63,23 +64,39 @@ def tokenize(news_data, name):
     return all_tokens, article_tokens_list
 
 def save_to_csv(X_train, X_test, y_train, y_test):
-    X_train.to_csv('training_data.csv')
-    X_test.to_csv('testing_data.csv')
-    y_train.to_csv('training_labels.csv')
-    y_test.to_csv('testing_labels.csv')
+    X_train.to_csv('{}training_data.csv'.format(PREPROCESSED_DATA_DIR))
+    X_test.to_csv('{}testing_data.csv'.format(PREPROCESSED_DATA_DIR))
+    y_train.to_csv('{}training_labels.csv'.format(PREPROCESSED_DATA_DIR))
+    y_test.to_csv('{}testing_labels.csv'.format(PREPROCESSED_DATA_DIR))
+
+def assign_id_to_article_tokens(vocabulary, tokens_per_article):
+        # assign index to each word in vocabulary
+    indexed_words_per_article = list()
+    for article in tokens_per_article:
+        indexed_words = []
+        for word in article:
+            if word in vocabulary:
+                indexed_words.append(vocabulary[word])
+        indexed_words_per_article.append(indexed_words)
+
+    return indexed_words_per_article
 
 # Split into training/testing data and preprocess 
-def split_and_preprocess(all_tokens, tokens_per_article, all_news):
-
+def split_and_preprocess(vocabulary, tokens_per_article, all_news):
+    # TODO: how to use this with the CNN (words converted to number)
+    cnn_data = {}
+    indexed_words_per_article = assign_id_to_article_tokens(vocabulary, tokens_per_article)
+   
     X = np.array(tokens_per_article, dtype="object")
 
     labels = all_news["label"]
     y = [1 if article == "FAKE" else 0 for article in labels]
-    y = pd.DataFrame(y, columns=["label"])
+    y = pd.DataFrame(y, columns=["label"])  
 
     #Create 80-30 train test split
     print("Splitting data: 70% training, 30% testing")
     X_train, X_test, y_train, y_test = ms.train_test_split(X, y, test_size = 0.3, random_state=0)
+    cnn_data['x_train'], cnn_data['x_test'], cnn_data['y_train'], cnn_data['y_test'] = ms.train_test_split(indexed_words_per_article, y["label"].values, test_size = 0.3, random_state=0)
     # print(X_train.shape, X_test.shape)
     # print(y_train.shape, y_test.shape)
 
@@ -102,10 +119,14 @@ def split_and_preprocess(all_tokens, tokens_per_article, all_news):
     y_train = pd.DataFrame(y_train, columns=["label"])
     y_test = pd.DataFrame(y_test, columns=["label"])
 
-    return X_train, X_test, y_train, y_test
+    return X_train, X_test, y_train, y_test, cnn_data
 
-def preprocess_test(use_full_dataset=False):
+def preprocess(use_full_dataset=False):
     print("\nTesting preprocessing of data...\n")
+
+    if not use_full_dataset: 
+        global PREPROCESSED_DATA_DIR
+        PREPROCESSED_DATA_DIR = DATA_DIR + "test_preprocessed/"
 
     fake = "Fake.csv" if use_full_dataset else "Fake_test.csv"
     real = "True.csv" if use_full_dataset else "True_test.csv"
@@ -131,18 +152,23 @@ def preprocess_test(use_full_dataset=False):
     all_tokens = fake_news_all_tokens + real_news_all_tokens
     tokens_per_article = fake_news_tokens_per_article + real_news_tokens_per_article
 
+    # create the vocabulary of the dataset. Assign unique numerical id to each word
+    vocabulary = {}
+    for i, token in enumerate(all_tokens):
+        if token not in vocabulary:
+            vocabulary[token] = i + 1
+
     print()
 
     # Split and preprocess the data into training and testing data
-    X_train, X_test, y_train, y_test = split_and_preprocess(all_tokens,tokens_per_article, all_news)
+    X_train, X_test, y_train, y_test, cnn_data = split_and_preprocess(vocabulary,tokens_per_article, all_news)
 
     print("\nPreview of training data:")
     print(X_train[:5])
     print(y_train[:5])
     print()
 
-    return  X_train, X_test, y_train, y_test, all_tokens
+    return  X_train, X_test, y_train, y_test, cnn_data
 
 if __name__ == "__main__":
-    X_train, X_test, y_train, y_test = preprocess_test()
-    # save_to_csv(X_train, X_test, y_train, y_test)
+    X_train, X_test, y_train, y_test, cnn_data = preprocess()
