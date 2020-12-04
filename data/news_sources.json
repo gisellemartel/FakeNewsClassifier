@@ -1,7 +1,4 @@
 {
-    "cnn": {
-        "link": "http://edition.cnn.com/"
-    },
     "bbc": {
         "rss": "http://feeds.bbci.co.uk/news/rss.xml",
         "link": "http://www.bbc.com/"
@@ -10,24 +7,12 @@
         "rss": "https://www.theguardian.com/uk/rss",
         "link": "https://www.theguardian.com/international"
     },
-    "breitbart": {
-        "link": "http://www.breitbart.com/"
-    },
-    "infowars": {
-        "link": "https://www.infowars.com/"
-    },
-    "foxnews": {
-        "link": "http://www.foxnews.com/"
-    },
     "nbcnews": {
         "link": "http://www.nbcnews.com/"
     },
     "washingtonpost": {
         "rss": "http://feeds.washingtonpost.com/rss/world",
         "link": "https://www.washingtonpost.com/"
-    },
-    "theonion": {
-        "link": "http://www.theonion.com/"
     },
     "cbcnews": {
         "rss": "https://www.cbc.ca/rss/",
@@ -40,5 +25,27 @@
     "ctvnews": {
         "rss": "https://www.ctvnews.ca/more/rss-feeds-for-ctv-news",
         "link": "https://www.ctvnews.ca/"
+    },
+    "breitbart": {
+        "link": "http://www.breitbart.com/"
+    },
+    "infowars": {
+        "link": "https://www.infowars.com/"
+    },
+    "theonion": {
+        "link": "http://www.theonion.com/"
+    },
+    "thebeaverton": {
+        "link": "https://www.thebeaverton.com/",
+        "rss": "https://www.thebeaverton.com/page/56/?format=feed&type=rss"
+    },
+    "prntly": {
+        "link": "https://prntly.com/"
+    },
+    "nationalreport": {
+        "link": "https://nationalreport.net/"
+    },
+    "dailybuzzlive": {
+        "link": "http://dailybuzzlive.com/"
     }
 }

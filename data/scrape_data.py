@@ -18,7 +18,7 @@ data = {}
 data['newspapers'] = {}
 
 # Loads the JSON files with news sites
-with open('NewsPapers.json') as data_file:
+with open('news_sources.json') as data_file:
     companies = json.load(data_file)
 
 count = 1
