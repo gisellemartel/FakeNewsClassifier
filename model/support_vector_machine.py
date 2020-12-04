@@ -39,7 +39,7 @@ def perform_hyperparam_grid_search(X_train, y_train, param_grid):
     grid_search.fit(X_train, y_train)
     return grid_search
     
-def test_run(X_train, X_test, y_train, use_full_dataset=False):
+def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     if(not use_full_dataset) : tools.set_results_dir("./test_results/")
     print("Testing SVM Classifier ...\n")
 
@@ -59,8 +59,6 @@ def test_run(X_train, X_test, y_train, use_full_dataset=False):
     best_estimator = grid_search.best_estimator_
     hyperparams = grid_search.best_params_
     score = grid_search.best_score_*100
-
-    tools.plot_feature_importances(X_train, best_estimator, "SVC", savefig=True)
 
     # calculate the training and testing scores and plot the result
     trn_scores, test_scores = tools.calculate_estimator_scores([X_train, X_test, y_train, y_test], estimators)

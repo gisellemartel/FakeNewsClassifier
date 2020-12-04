@@ -58,8 +58,6 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     hyperparams = grid_search.best_params_
     score = grid_search.best_score_*100
 
-    tools.plot_feature_importances(X_train, best_estimator, "NaiveBayes", savefig=True)
-
     # calculate the training and testing scores and plot the result
     trn_scores, test_scores = tools.calculate_estimator_scores([X_train, X_test, y_train, y_test], estimators)
 
