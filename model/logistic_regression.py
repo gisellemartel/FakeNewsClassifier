@@ -8,7 +8,6 @@ sys.path.insert(1, '../')
 import tools as tools
 
 def logistic_regression_train(X, y, c):
-    print("Fitting data to LogisticRegression Classifier, this may take a while...")
     model = sklearn.linear_model.LogisticRegression(random_state=0, max_iter=100, C=c)
     model.fit(X,y)
     return model
@@ -16,37 +15,45 @@ def logistic_regression_train(X, y, c):
 def logistic_regression_predict(model, X):
     return model.predict(X)
 
-def logisitic_regression_hyperparam_search(X, y, C):
+'''
+    Trains each estimator with the given hyperparams, displays the training accuracy for each and returns all estimators
+'''
+def train_all_estimators(X, y, C):
+    print("Fitting data to LogisticRegression Classifier, this may take a while...")
     estimators = []
-    highest_accuracy = 0
-    best_estimator = None
-    best_hyperparams = ()
-    # find the best accuracy from the selection of hyperparams
     for c in C:
         estimator = logistic_regression_train(X,y,c)
         estimators.append(estimator)
         y_pred = logistic_regression_predict(estimator,X)
-
-        # calculate the accuracy
         a = accuracy_score(y,y_pred)*100
-        print("{:.3f}% training accuracy for C={:.3f}".format(a, c))
+        print("{:.3f}% training accuracy for C={:.4f}".format(a, c))
+    return estimators
 
-        if a > highest_accuracy:
-            highest_accuracy = a
-            best_estimator = estimator
-            best_hyperparams = {"C": c}
-
-    return estimators, highest_accuracy, best_estimator, best_hyperparams
+def perform_hyperparam_grid_search(X_train, y_train, param_grid):
+    model = sklearn.linear_model.LogisticRegression(random_state=0, max_iter=100, C=0.001)
+    grid_search = sklearn.model_selection.GridSearchCV(verbose=1, cv=5, param_grid=param_grid, estimator=model)
+    grid_search.fit(X_train, y_train)
+    return grid_search
     
+def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
+    if(not use_full_dataset) : tools.set_results_dir("./test_results/")
+    print("Testing Logistic Regression Classifier ...\n")
 
-def test_run(X_train, X_test, y_train, y_test):
-    print("\nTesting Logistic Regression Classifier ...\n")
+    # set the hyperparams
+    C = np.logspace(-4,4,9)
+    param_grid = {"C":C}
 
-  # set the hyperparams
-    C = np.logspace(-4,4,6)
+    # fetch all the estimators given the chosen hyperparameters
+    estimators = train_all_estimators(X_train, y_train, C)
 
     # perform hyperparam search
-    estimators, accuracy, best_estimator, hyperparams = logisitic_regression_hyperparam_search(X_train, y_train, C)
+    grid_search = perform_hyperparam_grid_search(X_train,y_train, param_grid)
+
+    best_estimator = grid_search.best_estimator_
+    hyperparams = grid_search.best_params_
+    score = grid_search.best_score_*100
+
+    tools.plot_feature_importances(X_train, best_estimator, "LogisticRegression", savefig=True)
 
     # calculate the training and testing scores and plot the result
     trn_scores, test_scores = tools.calculate_estimator_scores([X_train, X_test, y_train, y_test], estimators)
@@ -59,7 +66,7 @@ def test_run(X_train, X_test, y_train, y_test):
     tools.plot_estimator_scores("LogisticRegression",trn_scores,test_scores,True)
     
     # display details of best estimator
-    tools.display_best_estimator(accuracy, "LogisticRegression", hyperparams)
+    tools.display_best_estimator(score, "LogisticRegression", hyperparams)
 
     # use best estimator to make predictions
     y_pred = logistic_regression_predict(best_estimator, X_test)

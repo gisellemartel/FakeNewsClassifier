@@ -6,37 +6,12 @@ import model.naive_bayesian_classifier as NB
 import model.convolutional_neural_network as CNN
 
 import preprocess as preprocess
-
-logo = '''___            ___          ___       __      __   ___ ___  ___  __  ___  __   __  
-|__   /\  |__/ |__     |\ | |__  |  | /__`    |  \ |__   |  |__  /  `  |  /  \ |__) 
-|    /~~\ |  \ |___    | \| |___ |/\| .__/    |__/ |___  |  |___ \__,  |  \__/ |  \ 
-                                                                                    '''
-
-preprocessing = ''' __   __   ___  __   __   __   __   ___  __   __          __      __       ___         
-|__) |__) |__  |__) |__) /  \ /  ` |__  /__` /__` | |\ | / _`    |  \  /\   |   /\     
-|    |  \ |___ |    |  \ \__/ \__, |___ .__/ .__/ | | \| \__>    |__/ /~~\  |  /~~\ ...
-                                                                                       '''
-
-selection = '''
- __             __   __     ___    ___  __      __   ___       ___  __  ___    __        
-/  ` |     /\  /__` /__` | |__  | |__  |__)    /__` |__  |    |__  /  `  |  | /  \ |\ | .
-\__, |___ /~~\ .__/ .__/ | |    | |___ |  \    .__/ |___ |___ |___ \__,  |  | \__/ | \| .
-                                                                                         
-                                                                                         '''
-
-divider = '''
- __             __   __     ___             __           ___       __     
-/  ` |     /\  /__` /__` | |__  \ / | |\ | / _`    |\ | |__  |  | /__`    
-\__, |___ /~~\ .__/ .__/ | |     |  | | \| \__>    | \| |___ |/\| .__/ ...
-                                                                          
-                                                                          '''
-
-goodbye='''
- __   __   __   __   __       ___ 
-/ _` /  \ /  \ |  \ |__) \ / |__  
-\__> \__/ \__/ |__/ |__)  |  |___ 
-                                  
-                                  '''
+from ascii_art import logo
+from ascii_art import preprocessing
+from ascii_art import selection
+from ascii_art import divider
+from ascii_art import goodbye
+from ascii_art import completed
 
 if __name__ == "__main__":
     print("\n" + logo + "\n")
@@ -51,19 +26,24 @@ if __name__ == "__main__":
         
         if inp == '0':
             print(divider)
-            LR.test_run(X_train, X_test, y_train, y_test)
+            LR.test_run(X_train, X_test, y_train, y_test, answer != 'm')
+            print(completed)
         elif inp == '1':
             print(divider)
-            DT.test_run(X_train, X_test, y_train, y_test)
+            DT.test_run(X_train, X_test, y_train, y_test, answer != 'm')
+            print(completed)
         elif inp == '2':
             print(divider)
-            RF.test_run(X_train, X_test, y_train, y_test)
+            RF.test_run(X_train, X_test, y_train, y_test, answer != 'm')
+            print(completed)
         elif inp == '3':
             print(divider)
-            SVC.test_run(X_train, X_test, y_train, y_test)
+            SVC.test_run(X_train, X_test, y_train, y_test, answer != 'm')
+            print(completed)
         elif inp == '4':
             print(divider)
-            NB.test_run(X_train, X_test, y_train, y_test)
+            NB.test_run(X_train, X_test, y_train, y_test, answer != 'm')
+            print(completed)
         # elif inp == '5':
         #     CNN.test_run(X_train, X_test, y_train, y_test)
         elif inp == '6':
@@ -77,6 +57,7 @@ if __name__ == "__main__":
             SVC.test_run(X_train, X_test, y_train, y_test)
             print(divider)
             NB.test_run(X_train, X_test, y_train, y_test)
+            print(completed)
         elif inp == 'q':
             print(goodbye)
             break

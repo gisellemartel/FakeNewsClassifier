@@ -15,6 +15,10 @@ from sklearn.metrics import precision_recall_fscore_support as score
 
 RESULTS_DIR = "./results/"
 
+def set_results_dir(dir):
+    global RESULTS_DIR
+    RESULTS_DIR = dir
+
 '''
     Generates a pie chart of the label distribution
 '''
@@ -67,7 +71,7 @@ def display_prediction_scores(test,prediction):
     precision = sklearn.metrics.precision_score(test,prediction)
     f1 = sklearn.metrics.f1_score(test,prediction)
     jacccard = sklearn.metrics.jaccard_score(test,prediction)
-    mean_sqr_err = np.sqrt(mean_squared_error(test, prediction))
+    mean_sqr_err = mean_squared_error(test, prediction)
 
     print("Printing metrics...")
     print("mean squared error: {:.3f}%".format(mean_sqr_err*100))

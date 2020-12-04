@@ -10,7 +10,6 @@ sys.path.insert(1, '../')
 import tools as tools
 
 def naive_bayesian_train(X,y,a,f):
-    print("Fitting data to NaiveBayes Classifier, this may take a while...")
     model = MultinomialNB(alpha=a, fit_prior=f)
     model.fit(X, y)
     return model
@@ -18,38 +17,48 @@ def naive_bayesian_train(X,y,a,f):
 def naive_bayesian_predict(model, X):
     return model.predict(X)
 
-def naive_bayes_hyperparam_search(X, y, A, F):
+'''
+    Trains each estimator with the given hyperparams, displays the training accuracy for each and returns all estimators
+'''
+def train_all_estimators(X, y, A, F):
+    print("Fitting data to NaiveBayes Classifier, this may take a while...")
     estimators = []
-    highest_accuracy = 0
-    best_estimator = None
-    best_hyperparams = ()
-    # find the best accuracy from the selection of hyperparams
-    for a in A:
-        for f in F:
+    for f in F:
+        for a in A:
             estimator = naive_bayesian_train(X,y,a,f)
             estimators.append(estimator)
             y_pred = naive_bayesian_predict(estimator,X)
-
-            # calculate the accuracy
             acc = accuracy_score(y,y_pred)*100
-            print("{:.3f}% training accuracy for alpha={:.3f} fit_prior={}".format(acc,a,f))
+            print("{:.3f}% training accuracy for alpha={:.4f} fit_prior={}".format(acc,a,f))
 
-            if acc > highest_accuracy:
-                highest_accuracy = acc
-                best_estimator = estimator
-                best_hyperparams = {"alpha": a, "fit_prior": f}
+    return estimators
 
-    return estimators, highest_accuracy, best_estimator, best_hyperparams
+def perform_hyperparam_grid_search(X_train, y_train, param_grid):
+    model = MultinomialNB(alpha=1.0, fit_prior=True)
+    grid_search = sklearn.model_selection.GridSearchCV(verbose=1, cv=5, param_grid=param_grid, estimator=model)
+    grid_search.fit(X_train, y_train)
+    return grid_search
 
-def test_run(X_train, X_test, y_train, y_test):
-    print("\nTesting Naive Bayesian Classifier ...\n")
+def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
+    if(not use_full_dataset) : tools.set_results_dir("./test_results/")
+    print("Testing Naive Bayesian Classifier ...\n")
     
     # set the hyperparams
-    A = np.linspace(0.05,1,12)
+    A = np.logspace(-4,4,9)
     F = [True, False]
+    param_grid = {"alpha":A, "fit_prior":F}
+
+    # fetch all the estimators given the chosen hyperparameters
+    estimators = train_all_estimators(X_train, y_train, A , F)
 
     # perform hyperparam search
-    estimators, accuracy, best_estimator, hyperparams = naive_bayes_hyperparam_search(X_train, y_train, A,F)
+    grid_search = perform_hyperparam_grid_search(X_train,y_train, param_grid)
+
+    best_estimator = grid_search.best_estimator_
+    hyperparams = grid_search.best_params_
+    score = grid_search.best_score_*100
+
+    tools.plot_feature_importances(X_train, best_estimator, "NaiveBayes", savefig=True)
 
     # calculate the training and testing scores and plot the result
     trn_scores, test_scores = tools.calculate_estimator_scores([X_train, X_test, y_train, y_test], estimators)
@@ -62,7 +71,7 @@ def test_run(X_train, X_test, y_train, y_test):
     tools.plot_estimator_scores("NaiveBayes",trn_scores,test_scores,True)
     
     # display details of best estimator
-    tools.display_best_estimator(accuracy, "NaiveBayes", hyperparams)
+    tools.display_best_estimator(score, "NaiveBayes", hyperparams)
 
     # use best estimator to make predictions
     y_pred = naive_bayesian_predict(best_estimator, X_test)

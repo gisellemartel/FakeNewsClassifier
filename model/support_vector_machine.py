@@ -1,4 +1,5 @@
 import numpy as np
+import sklearn
 from sklearn.metrics import accuracy_score
 from sklearn.svm import SVC
 
@@ -8,7 +9,6 @@ sys.path.insert(1, '../')
 import tools as tools
 
 def support_vector_machine_train(X,y,c,g,k):
-    print("Fitting data to SVC, this may take a while...")
     svc = SVC(kernel=k, C=c, gamma=g, max_iter=100, random_state=0)
     svc.fit(X, y)
     return svc
@@ -16,41 +16,51 @@ def support_vector_machine_train(X,y,c,g,k):
 def support_vector_machine_predict(svc, X):
     return svc.predict(X)
 
-#  performs hyperparam search on SVC estimators, returns the best result
-def svc_hyperparam_search(X, y, C, G, K):
+'''
+    Trains each estimator with the given hyperparams, displays the training accuracy for each and returns all estimators
+'''
+def train_all_estimators(X, y, C, G, K):
+    print("Fitting data to SVC, this may take a while...")
     estimators = []
-    highest_accuracy = 0
-    best_estimator = None
-    best_hyperparams = ()
-    # find the best accuracy from the selection of hyperparams
     for c in C:
         for g in G:
             for k in K:
                 svc = support_vector_machine_train(X,y,c,g,k)
                 estimators.append(svc)
                 y_pred = support_vector_machine_predict(svc,X)
-
-                # calculate the accuracy
                 a = accuracy_score(y,y_pred)*100
                 print("{:.3f}% training accuracy for C={:.3f} gamma={:.3f} kernel={}".format(a,c,g,k))
 
-                if a > highest_accuracy:
-                    highest_accuracy = a
-                    best_estimator = svc
-                    best_hyperparams = {"c": c, "gamma": g}
+    return estimators
 
-    return estimators, highest_accuracy, best_estimator, best_hyperparams
-
-def test_run(X_train, X_test, y_train, y_test):
-    print("\nTesting SVM Classifier ...\n")
+def perform_hyperparam_grid_search(X_train, y_train, param_grid):
+    model = SVC(max_iter=100, random_state=0)
+    grid_search = sklearn.model_selection.GridSearchCV(verbose=1, cv=5, param_grid=param_grid, estimator=model)
+    grid_search.fit(X_train, y_train)
+    return grid_search
+    
+def test_run(X_train, X_test, y_train, use_full_dataset=False):
+    if(not use_full_dataset) : tools.set_results_dir("./test_results/")
+    print("Testing SVM Classifier ...\n")
 
     # set the hyperparams
-    C = np.logspace(-4,4,6)
-    G = np.logspace(-4,4,6)
+    C = np.logspace(-2,3,6)
+    G = np.logspace(-2,3,6)
     K = ["rbf", "linear"]
 
+    param_grid = {"C":C, "gamma": G, "kernel": K}
+
+    # fetch all the estimators given the chosen hyperparameters
+    estimators = train_all_estimators(X_train, y_train, C, G, K)
+
     # perform hyperparam search
-    estimators, accuracy, best_estimator, hyperparams = svc_hyperparam_search(X_train, y_train, C, G, K)
+    grid_search = perform_hyperparam_grid_search(X_train,y_train, param_grid)
+
+    best_estimator = grid_search.best_estimator_
+    hyperparams = grid_search.best_params_
+    score = grid_search.best_score_*100
+
+    tools.plot_feature_importances(X_train, best_estimator, "SVC", savefig=True)
 
     # calculate the training and testing scores and plot the result
     trn_scores, test_scores = tools.calculate_estimator_scores([X_train, X_test, y_train, y_test], estimators)
@@ -63,7 +73,7 @@ def test_run(X_train, X_test, y_train, y_test):
     tools.plot_estimator_scores("SVC",trn_scores,test_scores,True)
     
     # display details of best estimator
-    tools.display_best_estimator(accuracy, "SVC", hyperparams)
+    tools.display_best_estimator(score, "SVC", hyperparams)
 
     # use best estimator to make predictions
     y_pred = support_vector_machine_predict(best_estimator, X_test)
