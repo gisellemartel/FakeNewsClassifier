@@ -5,6 +5,7 @@ import preprocess as preprocess
 import tools as tools
 
 #Library imports for deep-learning recommender
+import numpy as np
 import sklearn
 import sklearn.preprocessing     # For StandardScaler
 import sklearn.linear_model      # For LogisticRegression
