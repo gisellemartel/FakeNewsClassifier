@@ -7,14 +7,22 @@ import string
 import nltk
 nltk.download('punkt')
 nltk.download('wordnet')
+nltk.download('stopwords')
 from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer 
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords 
 
 import sklearn
 import sklearn.model_selection as ms
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 DATA_DIR = "./data/"
+
+news_networks = ["CNN", "BBC", "theguardian", "foxnews", "nbcnews", "washingtonpost"]
+common_words = ["said", "would", "image", "via"]
+stop_words = list(stopwords.words("english"))
+stop_words.extend(news_networks)
+stop_words.extend(common_words)
 
 # parses the dataset from the csv file and sets the correct label
 def parse_dataset(csv_file, label):
@@ -42,8 +50,8 @@ def tokenize(news_data, name):
     print("Tokenizing {} dataset, this may take a few minutes...".format(name))
     for article in (news_data["text"]):
         words = word_tokenize(article)
-        words = [word.lower() for word in words if word.isalpha()] #lowercase
-        words = [word for word in words if word not in string.punctuation]
+        words = [word.lower() for word in words if word.isalpha()]
+        words = [word for word in words if word not in stop_words and word not in string.punctuation]
             
         # TODO investigate better solution for tokenization, possibly with pytorch?
         lemmatizer = WordNetLemmatizer()
