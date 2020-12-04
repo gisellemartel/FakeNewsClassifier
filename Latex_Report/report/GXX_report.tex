@@ -20,7 +20,7 @@
 \section{Introduction}
 \textcolor{blue}{State your goal by giving give an example of the data you're working with and an example of the kind of prediction you hope to achieve. Don't bother with a literature review of your subject area, but do mention any important sources you directly relied upon.}\\
 
-The term “fake news” mainly refers to false or inaccurate information that is mistakenly or inadvertently created or spread. Fake news may have some hints of truth, but lack any contextualizing details. They may not include any verifiable facts or sources or may include basic verifiable facts that are written using deliberately inflammatory language that leaves out pertinent details or only presents one viewpoint. Our project aims to analyze and classify a list of news articles from 2 different datasets containing fake news and Real news entries. Entries in both datasets have a similar structure and are of the following form:   
+The term “fake news” mainly refers to false or inaccurate information that is mistakenly or inadvertently created or spread. Fake news may have some hints of truth, but lack any contextualizing details. They may not include any verifiable facts or sources or and may contain deliberately inflammatory language that leaves out pertinent details or only presents one viewpoint. Our project aims to analyze and classify a list of news articles from 2 different datasets containing fake news and Real news entries. Entries in both datasets have a similar structure and are of the following form:   
 
 \begin{center}
 \includegraphics[width=\linewidth]{Latex_Report/report/dt_example.png}
@@ -102,6 +102,17 @@ Finally, a neural network was constructed
 
 \textcolor{blue}{Summarize what you could and could not conclude based on your experiments.
 The ”References” section (bibliography) is optional. If you cite any books, websites, or academic papers, then you can add them to bibliography.bib and cite them in this re- port. Otherwise delete the references section.}
+
+As discussed in the previous section our quest for article classification involved training various types of classifiers each taking their own set of parameters to achieve the most ideal results possible. We notice that logistic regression had the highest accuracy at 91.92\% when it came to correctly classifying our tokenized data into the Fake and Real categories. The confusion matrix generated for this model shows that it correctly classified 5916 words into the "Real" category and 6458 words into the "Fake" category and overfitting. The degree of overfitting for this classifier was also the lowest obtained at 0.018. This allows us to conclude that logistic regression classifier was the best model to use on our preprocessed data. 
+
+Logistic regression was closely followed by the Random forest classifier with a classification accuracy of 90.48\%. The confusion matrix generated for this classifier shows very similar results to that of the logistic regression with 5745 words correctly classified into the "Real" category and 6435 words into the "Fake" category. The model, however, had a much higher overfitting value at 0.705. This means that although the classifiers were very close in terms of their accuracy, logistic regression remains at an advantage given that it had much less overfitting of data. 
+
+The Multinomial Naive Bayesian model comes in third place in terms of performance with a classification accuracy of 88.35\%. Its confusion matrix shows that the model was able to successfully classify 5696 words into the "Real" category and 6128 words into the "Fake" category. The model has an advantage over the other two that it was the fastest to run and classify the data with a very low degree of overfitting at 0.045. In total the model took approximately 3 seconds to run from start to finish including the hyper parameter search that occupies the bulk of execution time. Perhaps this model would be a better fit to use compared to the logistic regression classifier if the goal is to achieve speed over accuracy. 
+
+Decision Tree Classifier follows the Bayesian model closely with a classification accuracy of 87.54\%. Its confusion matrix shows that the mode was able to correctly classify 5501 words into the "Real" category and 6198 words into the "Fake" category. The model was significantly slower to run than the Bayesian model at 2.6 minutes vs the 3 seconds the Bayesian model took to classify our data. It also had a much higher overfitting value at 1.596 and thus we can conclude that the Naive Bayesian model is better employed to solve our particular problem on the provided dataset.  
+
+Lastly the support vector machine classifier was the slowest to run out of all classifiers taking approximately 10.7 minutes to fully classify the data. It had the lowest classification accuracy of 83.29\% compared to other models and an overfitting value of 0.183. The model was successfully able to classify 5476 words into the "Real" category compared and 5736 into the "Fake" category. This information allows us to conclude that although the overfitting value for the model was relatively low, that advantage is outweighed by the slow run time for the model and a logistic regression model can achieve better results at a faster pace and with less overfitting. 
+
 
 \begin{table*}[!hb]\centering
    \begin{center}
