@@ -18,7 +18,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 DATA_DIR = "./data/"
 
-news_networks = ["CNN", "BBC", "theguardian", "foxnews", "nbcnews", "washingtonpost"]
+news_networks = ["reuters", "CNN", "BBC", "theguardian", "foxnews", "nbcnews", "washingtonpost"]
 common_words = ["said", "would", "image", "via"]
 stop_words = list(stopwords.words("english"))
 stop_words.extend(news_networks)
