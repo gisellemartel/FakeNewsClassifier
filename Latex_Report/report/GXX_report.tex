@@ -13,8 +13,8 @@
 \maketitle
 
 \begin{abstract}
-   Abstract here. Give an executive summary of your report: rough goal, rough methods, rough results. Usually no more than 200 words.
-\end{abstract}
+   Intentionally deceptive content presented under the disguise of legitimate facts has become a widespread information accuracy and integrity problem affecting various aspects of modern day life. The following report attempts to employ supervised and unsupervised machine learning techniques to classify a collection of articles as "Fake" or "Real" news. Data was collected from the internet and was manipulated during a preprocessing phase to achieve an ideal input for the various models implemented to help with such classification. The following report compares the general accuracy and performance of a Logistic regression classifier, Random Forest Classifier, Decision Tree Classifier, Multinomial Naive Bayes Classifier and a Support Vector Machine classifier all of which are classified under the category of supervised learning. The report also implements a Central Neural Network.... The results show that Logistic regression has the highest level of accuracy and lowest level of overfitting, thus it was generally the best model to use for classifying articles into the two categories. This classifier was followed in terms of accuracy and performance by the other 4 classifiers in the order mentioned above and the results are presented in the following report. 
+\end{abstract} 
 
 %------------------------------------------------------------------------
 \section{Introduction}
@@ -26,9 +26,7 @@ The term “fake news” mainly refers to false or inaccurate information that i
 \includegraphics[width=\linewidth]{Latex_Report/report/dt_example.png}
 \end{center}
 
-The datasets were retrieved from a similar experiment conducted by (insert author here) however, the implementation details of the experiment have been thoroughly modified and expanded. The basic organization of the datasets include a title for each article, the text of the article, its subject and its date. Our project aims to classify words from these articles into two categories, namely a fake news category and a true news category by predicting the probability that a particular word is in present in either a fake or true news article. This classification and prediction is to be made using machine learning models that we have learned in class, namely a Support Vector Machine Classifier, a Random Forest Classifier, a Decision Tree Classifier, a Multinomial Naive Bayes Classifier, a Logistic regression Classifier, and A convolutional neural network. \\
-
-The results we aim to achieve are in the form of detailed graphs and confusion matrices for each of the classifiers as well as a report of accuracy, precision and recall metrics. 
+The datasets were retrieved from a similar experiment conducted by \textcolor{red}{(insert author here)} however, the implementation details of the experiment have been thoroughly modified and expanded. The basic organization of the datasets include a title for each article, the text of the article, its subject and its date. Our project aims to classify words from these articles into two categories, namely a fake news category and a true news category by predicting the probability that a particular word is in present in either a fake or true news article. This classification and prediction is to be made using supervised and unsupervised machine learning models that we have learned in class, namely a Logistic regression classifier, Random Forest Classifier, Decision Tree Classifier, Multinomial Naive Bayes Classifier and a Support Vector Machine classifier. Our goal is to present the respective results from each model and compare their performance to one another. The results we aim to achieve are in the form of detailed graphs and confusion matrices for each of the classifiers as well as a report of accuracy, precision and recall metrics. 
 
 
 %------------------------------------------------------------------------
@@ -38,7 +36,7 @@ The results we aim to achieve are in the form of detailed graphs and confusion m
 
 The first step we had to take to prepare for our experiment was to preprocess our data. This was an important step given that we needed maximize prediction performance by getting rid of empty data cells as well as formatting all entries in each column of both datasets in a similar manner. Preprocessing the data involved parsing both datasets, clearing out empty data cells and formatting the date columns in a uniform manner for all cells. It also involved assigning each dataset their respective labels of fake vs true news. Once this was done, both files were joined together to create one big dataset that we later used in our tokenization process. Tokenization was a necessary process that allowed us to extract all unique words from the joined dataset while excluding some stop-words that were present in abundance throughout the data. Following tokenization the data was split into training and testing components. We opted to split the data into a 70\% training set and a 30\% testing set as it seemed ideal to have our training data consisting of more than double that of the testing data. Following the split we generated a score graph, a document-term matrix for each of the training and testing data and converted both the testing and training datasets into dataframes that we later used in our models. \\
 
-The first model we worked on was the Logistic Regression classifier that we used to predict the probability of our categorically dependent tokenized text. We used the corresponding Sklearn library to generate our model and fit our data to it using hyper parameters obtained via a hyper parameter search for values of C. The search allowed us to obtain the best possible accuracy, calculate the training and testing scores as well as to determine overfitting and perform prediction calculations. The model worked in such a way that it treated our tokenized data as binary variables that contain data coded as 1 (in our case Real) or 0 (in our case "fake") and used this data to make predictions. We subsequently generated a graph of each of the training and testing scores as well as a confusion matrix (Figure~\ref{fifth_figure}) that helped us visualize the result. The model successfully achieved an accuracy of 91.92\%, a mean squared error of 8.07\% and a precision of 92.70\%. \\
+The first model we worked on was the Logistic Regression classifier that we used to predict the probability of our categorically dependent tokenized text. We used the corresponding Sklearn library to generate our model and fit our data to it using hyper parameters obtained via a hyper parameter search for values of C with the help of GridSearchCV method. The search allowed us to obtain the best possible accuracy, calculate the training and testing scores as well as to determine overfitting and perform prediction calculations. The model worked in such a way that it treated our tokenized data as binary variables that contain data coded as 1 (in our case Real) or 0 (in our case "fake") and used this data to make predictions. We subsequently generated a graph of each of the training and testing scores as well as a confusion matrix (Figure~\ref{first_figure}) that helped us visualize the result. The model successfully achieved an accuracy of 91.92\%, a mean squared error of 8.07\% and a precision of 92.70\%. \\
 
 \begin{figure}[h]
    \begin{center}
@@ -46,10 +44,10 @@ The first model we worked on was the Logistic Regression classifier that we used
         \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/LR/scores_plot.png}
    \end{center}
         \vspace*{-5mm}
-        \caption{\label{fifth_figure}}
+        \caption{\label{first_figure}}
 \end{figure}
 
-Next, we worked on the Random Forest classifier that fits a number of decision tree classifiers on various sub-samples of our dataset and uses averaging to improve the predictive accuracy while also controlling over-fitting to a satisfying degree. A hyper parameter search was conducted to find the best maximum depth and number of estimator values that provide us with the highest possible accuracy for our model. We then calculated the training and testing score values and determined the overfitting before generating a confusion matrix, a plot for the scores of each estimator and a plot displaying the feature importances for the top 25 words all shown in Figure~\ref{third_figure} below. The model successfully achieved an accuracy of 90.48\%, a mean squared error of 9.51\% and a precision of 90.45\%.\\ 
+Next, we worked on the Random Forest classifier that fits a number of decision tree classifiers on various sub-samples of our dataset and uses averaging to improve the predictive accuracy while also controlling over-fitting to a satisfying degree. A hyper parameter search using GridSearchCV was conducted to find the best maximum depth and number of estimator values that provide us with the highest possible accuracy for our model. We then calculated the training and testing score values and determined the overfitting before generating a confusion matrix, a plot for the scores of each estimator and a plot displaying the feature importances for the top 25 words all shown in Figure~\ref{Second_figure} below. The model successfully achieved an accuracy of 90.48\%, a mean squared error of 9.51\% and a precision of 90.45\%.\\ 
 
 \begin{figure}[h]
    \begin{center}
@@ -58,10 +56,10 @@ Next, we worked on the Random Forest classifier that fits a number of decision t
         \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/RF/feature_importances.png}
    \end{center}
         \vspace*{-5mm}
-        \caption{\label{third_figure}}
+        \caption{\label{Second_figure}}
 \end{figure}
 
-Decision Tree classifier was the third model constructed with the goal of creating a supervised learning model that predicts the correct label for a particular word by learning simple decision rules inferred from the training data features. A hyper parameter search using various max\_depth values was conducted to obtain the best accuracy possible and to help us in generating the training and testing accuracy scores. The model's overfitting value was also calculated and the best estimator was then used to generate the predictions and display the confusion matrix as well as the graph shown in Figure~\ref{second_figure} below. The model successfully achieved an accuracy of 87.54\%, a mean squared error of 12.45\% and a precision of 87.19\%.
+Decision Tree classifier was the third model constructed with the goal of creating a classifier that predicts the correct label for a particular word by learning simple decision rules inferred from the training data features. A hyper parameter search using GridSearchCV and various max\_depth values was conducted to obtain the best accuracy possible and to help us in generating the training and testing accuracy scores. The model's overfitting value was also calculated and the best estimator was then used to generate the predictions and display the confusion matrix as well as the score graph shown in Figure~\ref{Third_figure} below. The model successfully achieved an accuracy of 87.54\%, a mean squared error of 12.45\% and a precision of 87.19\%.
  
 \begin{figure}[h]
    \begin{center}
@@ -69,10 +67,10 @@ Decision Tree classifier was the third model constructed with the goal of creati
         \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/DT/scores_plot.png}
    \end{center}
         \vspace*{-8mm}
-        \caption{\label{second_figure}}
+        \caption{\label{Third_figure}}
 \end{figure}
 
-Multinomial Naive Bayesian model given that it is suitable for classification of discrete features such as the tokenized text in our preprocessed dataset. We started by performing a hyper parameter search that allowed us to choose the best accuracy to fit our data. We used the corresponding sklearn library to generate our model and then calculated the training and testing scores as well as the overfitting before we could plot our data. Next, we picked the best estimator we found and made the predictions, generated a confusion matrix and displayed a score graph as shown in Figure~\ref{first_figure}. The model successfully achieved an accuracy of 88.35\% and a mean squared error of 11.64\% and a precision of 89.48\%. 
+Multinomial Naive Bayesian model was the next to be constructed given that it is suitable for classification of discrete features such as the tokenized text in our preprocessed dataset. We started by using GridSearchCV to perform a hyper parameter search that allowed us to choose the best accuracy to fit our data. We used the corresponding sklearn library to generate our model and then calculated the training and testing scores as well as the overfitting before we could plot our data. Next, we picked the best estimator we found and made the predictions, generated a confusion matrix and displayed a score graph as shown in Figure~\ref{fourth_figure}. The model successfully achieved an accuracy of 88.35\% and a mean squared error of 11.64\% and a precision of 89.48\%. 
 
 \begin{figure}[h]
    \begin{center}
@@ -80,10 +78,10 @@ Multinomial Naive Bayesian model given that it is suitable for classification of
         \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/NB/scores_plot.png}
    \end{center}
         \vspace*{-8mm}
-        \caption{\label{first_figure}}
+        \caption{\label{fourth_figure}}
 \end{figure}
 
-A Support Vector Machine model, which is a form of supervised learning, was then used to further help us in our quest for category prediction and classification. This model had an advantage of being memory efficient in the sense that it uses a subset of training points in the decision function called support vectors. In terms of the parameters used, we performed a hyper parameter search over 2 types of kernels, namely a Gaussian kernel of type 'rbf' and a linear kernel, as well as various values for C and gamma. This allowed us to obtain the best estimator to calculate the training and testing scores as well as to determine overfitting and perform prediction calculations. A plot for the scores of each estimator as well as a confusion matrix shown in Figure~\ref{fourth_figure} were generated to help us visualize our results. The model successfully achieved an accuracy of 83.29\%, a mean squared error of 16.70\% and a precision of 85.81\%.
+A Support Vector Machine model, which is a form of supervised learning, was then used to further help us in our quest for category prediction and classification. This model had an advantage of being memory efficient in the sense that it uses a subset of training points in the decision function called support vectors. In terms of the parameters used, we performed a hyper parameter search over 2 types of kernels, namely a Gaussian kernel of type 'rbf' and a linear kernel, as well as various values for C and gamma. This allowed us to obtain the best estimator to calculate the training and testing scores as well as to determine overfitting and perform prediction calculations. A plot for the scores of each estimator as well as a confusion matrix shown in Figure~\ref{fifth_figure} were generated to help us visualize our results. The model successfully achieved an accuracy of 83.29\%, a mean squared error of 16.70\% and a precision of 85.81\%.
 
 \begin{figure}[h]
    \begin{center}
@@ -91,7 +89,7 @@ A Support Vector Machine model, which is a form of supervised learning, was then
         \includegraphics[width=\linewidth]{Latex_Report/report/Graphs/SVC/scores_plot.png}
    \end{center}
         \vspace*{-5mm}
-        \caption{\label{fourth_figure}}
+        \caption{\label{fifth_figure}}
 \end{figure}
 
 Finally, a neural network was constructed 
