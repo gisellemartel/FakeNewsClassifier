@@ -1,5 +1,6 @@
 \documentclass[10pt,twocolumn,letterpaper]{article}
 \usepackage{cvpr}
+\usepackage[hyphens]{url}
 \usepackage{times}
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -23,10 +24,10 @@
 The term “fake news” mainly refers to false or inaccurate information that is mistakenly or inadvertently created or spread. Fake news may have some hints of truth, but lack any contextualizing details. They may not include any verifiable facts or sources or and may contain deliberately inflammatory language that leaves out pertinent details or only presents one viewpoint. Our project aims to analyze and classify a list of news articles from 2 different datasets containing fake news and Real news entries. Entries in both datasets have a similar structure and are of the following form:   
 
 \begin{center}
-\includegraphics[width=\linewidth]{Latex_Report/report/dt_example.png}
+\includegraphics[width=\linewidth]{Latex_Report/report/Graphs/dt_example.png}
 \end{center}
 
-The datasets were retrieved from a similar experiment conducted by \textcolor{red}{(insert author here)} however, the implementation details of the experiment have been thoroughly modified and expanded. The basic organization of the datasets include a title for each article, the text of the article, its subject and its date. Our project aims to classify words from these articles into two categories, namely a fake news category and a true news category by predicting the probability that a particular word is in present in either a fake or true news article. This classification and prediction is to be made using supervised and unsupervised machine learning models that we have learned in class, namely a Logistic regression classifier, Random Forest Classifier, Decision Tree Classifier, Multinomial Naive Bayes Classifier and a Support Vector Machine classifier. Our goal is to present the respective results from each model and compare their performance to one another. The results we aim to achieve are in the form of detailed graphs and confusion matrices for each of the classifiers as well as a report of accuracy, precision and recall metrics. 
+The datasets\cite{githubRia} \cite{githubFer} were retrieved from a similar experiments conducted by Ria Gandhi and Fernando Lopez \cite{Ria} \cite{Fernando} however, the implementation details of the experiments have been thoroughly modified and expanded. The basic organization of the datasets include a title for each article, the text of the article, its subject and its date. Our project aims to classify words from these articles into two categories, namely a fake news category and a true news category by predicting the probability that a particular word is in present in either a fake or true news article. This classification and prediction is to be made using supervised and unsupervised machine learning models that we have learned in class, namely a Logistic regression classifier, Random Forest Classifier, Decision Tree Classifier, Multinomial Naive Bayes Classifier and a Support Vector Machine classifier. Our goal is to present the respective results from each model and compare their performance to one another. The results we aim to achieve are in the form of detailed graphs and confusion matrices for each of the classifiers as well as a report of accuracy, precision and recall metrics. 
 
 
 %------------------------------------------------------------------------
@@ -110,6 +111,23 @@ Decision Tree Classifier follows the Bayesian model closely with a classificatio
 
 Lastly the support vector machine classifier was the slowest to run out of all classifiers taking approximately 10.7 minutes to fully classify the data. It had the lowest classification accuracy of 83.29\% compared to other models and an overfitting value of 0.183. The model was successfully able to classify 5476 words into the "Real" category compared and 5736 into the "Fake" category. This information allows us to conclude that although the overfitting value for the model was relatively low, that advantage is outweighed by the slow run time for the model and a logistic regression model can achieve better results at a faster pace and with less overfitting. 
 
+{\small
+\raggedright
+\bibliographystyle{ieeetr}
+\bibliography{bibliography}
+}
+
+\newpage
+\appendix
+
+
+%-------------------------------------------------------------------------
+\section*{Appendix: Extra Results (Optional)}
+
+% DELETE THIS TEXT
+\textcolor{blue}{If you want to include extra more detailed results that did not fit within the main report, include them here. Or, you can just delete this example section.}
+
+multiple citations \cite{breiman2001statistical,bishop2006pattern}.
 
 \begin{table*}[!hb]\centering
    \begin{center}
@@ -128,40 +146,5 @@ Lastly the support vector machine classifier was the slowest to run out of all c
    \end{center}
    \caption{Summary of Model Results\label{first_table}}
 \end{table*}
-
-{\small
-\bibliographystyle{cvpr_bibstyle}
-\bibliography{bibliography}
-}
-
-
-\newpage
-\appendix
-
-
-%-------------------------------------------------------------------------
-\section*{Appendix: Extra Results (Optional)}
-
-% DELETE THIS TEXT
-\textcolor{blue}{If you want to include extra more detailed results that did not fit within the main report, include them here. Or, you can just delete this example section.}
-
-%-------------------------------------------------------------------------
-\section*{Appendix: Examples of \LaTeX}
-
-% The 'dilde' in Table~\ref{} puts a no-break space prevents "Table" and "1" so that
-% the table number does not get split onto a separate line.
-% and it is good LaTeX practice to put tildes between 
-
-% DELETE THIS TEXT
-
-This is a reference to Table~\ref{first_table} and Table~\ref{second_table}.
-This is a reference to Figure~\ref{first_figure} and Figure~\ref{second_figure}.
-This is a citation \cite{breiman2001statistical} and this is
-multiple citations \cite{breiman2001statistical,bishop2006pattern}.
-This is \textit{italics} and \textbf{bold} text.
-This is a formula $\sum_{i=1}^N (y_i - \hat{y}_i(\mathbf{x}))^2$
-that is inline with the text (`text style') and this is a
-
-
 
 \end{document}
