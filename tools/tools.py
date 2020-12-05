@@ -267,7 +267,7 @@ def plot_cnn_losses(train_losses, test_losses, name, epochs, batch_size, learnin
 
     plt.plot(xpos, test_loss, c='r', marker='x', ms=15)
 
-    plt.ylim([-10,50])
+    plt.ylim([-10,130])
 
     plt.title( "Convolutional Neural Network Loss\n{} epochs, {} batch size, {} learning rate".format(epochs, batch_size, learning_rate))
     plt.legend()

@@ -256,7 +256,7 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     }
 
     # training parameters
-    epochs = 48
+    epochs = 24
     batch_size = 108
     learning_rate = 0.001
 
