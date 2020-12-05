@@ -1,7 +1,10 @@
-# COMP 432 Machine Learning - Term Project
-## Fake News Classifier - A comparison between traditional ML models and Deep Learning in text classification
-### Giselle Martel - 26352936
-### Firas Sawan - 26487815
+# Fake News Classifier
+## COMP 432 Machine Learning - Term Project
+### A comparison between traditional ML models and Deep Learning in text classification
+
+### Submitted by:
+#### Giselle Martel - 26352936
+#### Firas Sawan - 26487815
 
 This project focuses on various machine learning & deep learning models in the task of text classification, specifically the classification of news as "Fake News" or "Real News"
 
@@ -14,12 +17,11 @@ The Following Models are trained on the included datasets:
 - Naive Bayes Classifier
 - Convolutional Neural Network
 
+
 ## Dependencies
 
-### *Please use version 3.8 of python*
-
 ### You will need to install the following dependencies:
-
+## *Please use version 3.8 of python*
 - numpy
 - matplotlib
 - pandas
