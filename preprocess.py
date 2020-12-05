@@ -3,6 +3,8 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 import string
+import random
+import json
 
 import nltk
 nltk.download('punkt')
@@ -43,6 +45,48 @@ def parse_dataset(csv_file, label):
     news["label"] = label
 
     return news
+
+'''
+ parses data scraped from online sources, labels them according to news source
+ code used from here (reworked for this project): https://github.com/riag123/FakeNewsDeepLearning/blob/master/EDA_%2B_Pre_Processing.ipynb
+'''
+def parse_scraped_data(file_name):
+    print("Parsing scraped news from file: {}".format(file_name))
+    with open("{}{}".format(DATA_DIR, file_name)) as json_data:
+        scraped_data = json.load(json_data)
+
+        df = None
+        for i, site in enumerate((list(scraped_data["newspapers"]))):
+            articles = list(scraped_data["newspapers"][site]["articles"])
+            if i == 0:
+                df = pd.DataFrame.from_dict(articles)
+                df["site"] = site
+            else:
+                new_df = pd.DataFrame.from_dict(articles)
+                new_df["site"] = site
+                df = pd.concat([df, new_df], ignore_index = True)
+
+        is_fake_source = lambda source : "FAKE" if(
+            source == "breitbart" or 
+            source == "infowars" or 
+            source == "theonion" or
+            source == "thebeaverton" or 
+            source == "prntly" or
+            source == "nationalreport" or 
+            source == "dailybuzzlive"
+            ) else "REAL"
+                
+        scraped = df
+        scraped["label"] = scraped["site"].apply(is_fake_source)
+        scraped.drop(labels=["link", "site"], axis = 1, inplace=True)
+
+        scraped["published"] = scraped["published"].apply(lambda x: x[0:10])
+        scraped["published"] = scraped["published"].apply(pd.to_datetime)
+
+        #Combine scraped with current datasets
+        scraped.rename(columns={"published": "date"}, inplace=True)
+
+        return scraped
 
 # extracts individual words from news article text
 def tokenize(news_data, name):
@@ -135,8 +179,22 @@ def preprocess(use_full_dataset=False):
     print(real_news)
     print()
 
-    # join data
-    all_news = pd.concat([fake_news, real_news], axis=0)
+    all_news = None
+    if use_full_dataset:
+        # parse the scraped news articles
+        scraped_data = parse_scraped_data("scraped_articles.json")
+        print("\nPreview of Scraped news Dataset")
+        print(scraped_data)
+        print()
+        
+        # join data
+        all_news = pd.concat([fake_news, real_news, scraped_data], axis=0)
+    else:
+         # join data
+        all_news = pd.concat([fake_news, real_news], axis=0)
+
+    # randomly shuffle the data
+    all_news = all_news.sample(frac=1).reset_index(drop=True)
     
     fake_news_all_tokens, fake_news_tokens_per_article = tokenize(fake_news, "fake_news")
     real_news_all_tokens, real_news_tokens_per_article = tokenize(real_news, "real_news")
