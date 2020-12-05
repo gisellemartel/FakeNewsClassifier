@@ -6,12 +6,12 @@ import model.naive_bayesian_classifier as NB
 import model.convolutional_neural_network as CNN
 
 import preprocess as preprocess
-from ascii_art import logo
-from ascii_art import preprocessing
-from ascii_art import selection
-from ascii_art import divider
-from ascii_art import goodbye
-from ascii_art import completed
+from tools.ascii_art import logo
+from tools.ascii_art import preprocessing
+from tools.ascii_art import selection
+from tools.ascii_art import divider
+from tools.ascii_art import goodbye
+from tools.ascii_art import completed
 
 if __name__ == "__main__":
     print("\n" + logo + "\n")

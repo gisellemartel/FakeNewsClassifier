@@ -2,7 +2,7 @@ import sys
 sys.path.insert(1, '../')
 
 import preprocess as preprocess
-import tools as tools
+import tools.tools as tools
 
 #Library imports for deep-learning classifier
 import numpy as np
@@ -89,6 +89,7 @@ class CnnModel(nn.ModuleList):
 		self.dropout = nn.Dropout(0.25)
 		self.layers = build_cnn_layers(params)
 
+        # parse the layers as params for the model
 		for layer in self.layers:
 			item = self.layers[layer]
 			if type(item) == list:
@@ -228,11 +229,11 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
 		"kernel_sizes": [2,3,4,5]
 	}
 
-	# hyperparameters
+	model = CnnModel(model_params)
+
+    # training parameters
 	epochs = 20
 	batch_size = 14
 	learning_rate = 0.001
-
-	model = CnnModel(model_params)
 
 	train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learning_rate)

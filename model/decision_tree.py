@@ -6,7 +6,7 @@ from sklearn.metrics import accuracy_score
 import sys
 sys.path.insert(1, '../')
 
-import tools as tools
+import tools.tools as tools
 
 def decision_tree_train(X, y, d):
     model = sklearn.tree.DecisionTreeClassifier(max_depth=d,random_state=0)

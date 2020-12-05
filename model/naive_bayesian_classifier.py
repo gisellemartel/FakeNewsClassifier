@@ -7,7 +7,7 @@ from sklearn.naive_bayes import MultinomialNB
 import sys
 sys.path.insert(1, '../')
 
-import tools as tools
+import tools.tools as tools
 
 def naive_bayesian_train(X,y,a,f):
     model = MultinomialNB(alpha=a, fit_prior=f)

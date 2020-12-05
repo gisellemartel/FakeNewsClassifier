@@ -5,7 +5,7 @@ from sklearn.metrics import accuracy_score
 import sys
 sys.path.insert(1, '../')
 
-import tools as tools
+import tools.tools as tools
 
 def logistic_regression_train(X, y, c):
     model = sklearn.linear_model.LogisticRegression(random_state=0, max_iter=100, C=c)
