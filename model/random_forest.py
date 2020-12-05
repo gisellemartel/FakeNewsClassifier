@@ -46,7 +46,7 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     print("Testing Random Forest Classifier ...\n")
 
     # set the hyperparams
-    D = np.linspace(2,10,5)
+    D = np.linspace(2,14,7)
     N = np.linspace(2,20,10, dtype="int32")
 
     param_grid = {"max_depth":D, "n_estimators": N}

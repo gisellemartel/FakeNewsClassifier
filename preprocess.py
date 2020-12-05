@@ -161,7 +161,7 @@ def split_and_preprocess(vocabulary, tokens_per_article, all_news):
     return X_train, X_test, y_train, y_test
 
 def preprocess(use_full_dataset=False):
-    print("\nTesting preprocessing of data...\n")
+    print("\nPreprocessing of data...\n")
 
     if not use_full_dataset: 
         global PREPROCESSED_DATA_DIR

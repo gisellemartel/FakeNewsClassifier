@@ -229,13 +229,7 @@ def calculate_estimation_accuracy(true_values, predictions):
     # Return accuracy
     return (true_positives+true_negatives) / len(true_values)
 
-def predict(model, article):
-    model.eval()
-    y_pred = model(article)
 
-    return y_pred
-
-    return predictions, loss
 def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     if(not use_full_dataset) : tools.set_results_dir("./test_results/")
     print("Testing Convolutional Neural Network Classifier ...\n")
@@ -243,7 +237,7 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     # params for CNN model
     model_params = {
         # text preprocessing
-        "seq_len": 224,
+        "seq_len": 216,
         "num_words": 10000,
         "embedding_size": 64,
         
@@ -260,8 +254,8 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     model = CnnModel(model_params)
 
     # training parameters
-    epochs = 25
-    batch_size = 112
+    epochs = 18
+    batch_size = 108
     learning_rate = 0.001
 
     y_pred, train_accuracies, test_accuracies, train_losses, test_losses \

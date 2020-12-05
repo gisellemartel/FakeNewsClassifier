@@ -12,7 +12,7 @@ from datetime import datetime
 import pandas as pd
 
 # Set the limit for number of articles to download
-LIMIT = 50000
+LIMIT = 40000
 
 data = {}
 data['newspapers'] = {}

@@ -42,7 +42,7 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     print("Testing Decision Tree Classifier ...\n")
 
     # set the hyperparams
-    D = np.linspace(1,25,25)
+    D = np.linspace(2,30,15)
     param_grid = {"max_depth":D}
 
     # fetch all the estimators given the chosen hyperparameters

@@ -1,4 +1,7 @@
 {
+    "cnn": {
+        "link": "http://edition.cnn.com/"
+    },
     "bbc": {
         "rss": "http://feeds.bbci.co.uk/news/rss.xml",
         "link": "http://www.bbc.com/"
@@ -14,16 +17,19 @@
         "rss": "http://feeds.washingtonpost.com/rss/world",
         "link": "https://www.washingtonpost.com/"
     },
+    "foxnews": {
+        "link": "http://www.foxnews.com/"
+    },
     "cbcnews": {
-        "rss": "https://www.cbc.ca/rss/",
+        "rss": "https://www.cbc.ca/cmlink/rss-world",
         "link": "https://www.cbc.ca/news"
     },
     "globalnews": {
-        "rss": "https://globalnews.ca/pages/feeds/",
+        "rss": "https://globalnews.ca/feed/",
         "link": "https://globalnews.ca/"
     },
     "ctvnews": {
-        "rss": "https://www.ctvnews.ca/more/rss-feeds-for-ctv-news",
+        "rss": "https://www.ctvnews.ca/rss/ctvnews-ca-world-public-rss-1.822289",
         "link": "https://www.ctvnews.ca/"
     },
     "breitbart": {

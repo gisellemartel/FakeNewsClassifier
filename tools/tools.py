@@ -167,7 +167,7 @@ def plot_estimator_scores(name,trn_scores,test_scores,savefig=False):
 
     test_score, trn_score = np.max(test_scores),np.max(trn_scores)
 
-    plt.figure()
+    fig = plt.figure()
     x = np.linspace(0, len(trn_scores), len(trn_scores))
     
     plt.tick_params(axis='x',which='both',bottom=False,top=False,labelbottom=False)
