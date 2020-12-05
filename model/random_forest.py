@@ -8,7 +8,7 @@ from sklearn.model_selection import GridSearchCV
 import sys
 sys.path.insert(1, '../')
 
-import tools as tools
+import tools.tools as tools
 
 def random_forest_train(X,y,d,n):
     estimator = RandomForestClassifier(max_depth=d,n_estimators=n,random_state=0)

@@ -6,7 +6,7 @@ from sklearn.svm import SVC
 import sys
 sys.path.insert(1, '../')
 
-import tools as tools
+import tools.tools as tools
 
 def support_vector_machine_train(X,y,c,g,k):
     svc = SVC(kernel=k, C=c, gamma=g, max_iter=100, random_state=0)
