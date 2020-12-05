@@ -1,4 +1,4 @@
-# COMP 432 - Term Project
+# COMP 432 Machine Learning - Term Project
 ## Fake News Classifier - A comparison between traditional ML models and Deep Learning in text classification
 ### Giselle Martel - 26352936
 ### Firas Sawan - 26487815
