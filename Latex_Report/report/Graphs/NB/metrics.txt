@@ -1,7 +1,7 @@
-False Precision : 0.872
-False Recall : 0.887
-False fscore : 0.879
+False Precision : 0.849
+False Recall : 0.897
+False fscore : 0.872
 
-True Precision : 0.895
-True Recall : 0.881
-True fscore : 0.888
+True Precision : 0.900
+True Recall : 0.853
+True fscore : 0.876
