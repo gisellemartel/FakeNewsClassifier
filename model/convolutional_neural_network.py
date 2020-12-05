@@ -128,77 +128,98 @@ class CnnModel(nn.ModuleList):
 		return out.squeeze()
 
 def process_batch(model, optimizer, x_batch, y_batch):
-	x_batch = torch.tensor(x_batch).to(torch.int64)
-	y_batch = y_batch.type(torch.Tensor)
+    x_batch = torch.tensor(x_batch).to(torch.int64)
+    y_batch = y_batch.type(torch.Tensor)
 
-	# ensure the shape for batches is the same
-	x_batch_shape = list(x_batch.size())[0]
-	y_batch = torch.reshape(y_batch, (x_batch_shape,))
-	
-	# edge case
-	if x_batch_shape == 1:
-		print("BICTH")
-		print(x_batch)
-		print(y_batch[0])
-	
-	# Get the prediction for the current batch
-	y_pred = model(x_batch)
-	
-	# calculate the loss
-	loss = F.binary_cross_entropy(y_pred, y_batch)
-	
-	# Calculate the gradient and update
-	optimizer.zero_grad()
-	loss.backward()
-	optimizer.step() 
+    # ensure the shape for batches is the same
+    x_batch_shape = list(x_batch.size())[0]
+    y_batch = torch.reshape(y_batch, (x_batch_shape,))
 
-	predictions = list(y_pred.detach().numpy())
+    # Get the prediction for the current batch
+    y_pred = model(x_batch)
 
-	return predictions, loss
+    # calculate the loss
+    loss = F.binary_cross_entropy(y_pred, y_batch)
+
+    # Calculate the gradient and update
+    optimizer.zero_grad()
+    loss.backward()
+    optimizer.step() 
+
+    predictions = list(y_pred.detach().numpy())
+
+    return predictions, loss
 
 def train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learning_rate):
-	loader_train = DataLoader(CnnDataset(X_train, y_train), batch_size=batch_size)
-	loader_test = DataLoader(CnnDataset(X_test, y_test), batch_size=batch_size)
+    loader_train = DataLoader(CnnDataset(X_train, y_train), batch_size=batch_size)
+    loader_test = DataLoader(CnnDataset(X_test, y_test), batch_size=batch_size)
 
-	optimizer = optim.RMSprop(model.parameters(), lr=learning_rate)
+    optimizer = optim.RMSprop(model.parameters(), lr=learning_rate)
 
-	# carry out training of model
-	for epoch in range(epochs):
+    train_losses = []
+    train_accuracies = []
 
-		model.train()
-		predictions = []
-		
-		loss = 0
-		# feed the batches to the neural network
-		for x_batch, y_batch in loader_train:
-			pr, loss = process_batch(model, optimizer, x_batch, y_batch)
-			predictions += pr
-		
-		# Evaluate the prediction result
-		test_predictions = evaluation(model, loader_test)
-		
-		# Metrics calculation
-		train_accuary = calculate_accuray(y_train.values, predictions)*100
-		test_accuracy = calculate_accuray(y_test.values, test_predictions)*100
-		print("Epoch: {}, loss: {:.5f}, Train accuracy: {:.5f}%, Test accuracy: {:.5f}%".format(epoch+1, loss.item(), train_accuary, test_accuracy))
+    test_losses = []
+    test_accuracies = []
+
+    all_predictions = []
+
+    # carry out training of model
+    for epoch in range(epochs):
+
+        model.train()
+        predictions = []
+        
+        training_loss = 0
+        # feed the batches to the neural network
+        for x_batch, y_batch in loader_train:
+            pr, batch_loss = process_batch(model, optimizer, x_batch, y_batch)
+            predictions += pr
+            training_loss = training_loss + batch_loss
+        
+        all_predictions.append(predictions)
+        train_losses.append(training_loss.item())
+        
+        # Evaluate the prediction result
+        test_predictions, test_loss = evaluation(model, loader_test)
+        test_losses.append(test_loss.item())
+        
+        # Metrics calculation
+        train_accuracy = calculate_estimation_accuracy(y_train.values, predictions)*100
+        test_accuracy = calculate_estimation_accuracy(y_test.values, test_predictions)*100
+
+        train_accuracies.append(train_accuracy)
+        test_accuracies.append(test_accuracy)
+        print("Epoch: {}, loss: {:.5f}, Train accuracy: {:.5f}%, Test accuracy: {:.5f}%".format(epoch+1, training_loss.item(), train_accuracy, test_accuracy))
+
+    return all_predictions, train_accuracies, test_accuracies, train_losses, test_losses
 		
 def evaluation(model, loader_test):
     # Set the model in evaluation mode
     model.eval()
     predictions = []
-    
-    # Starst evaluation phase
+    loss = 0
+
+    # evaluate predictions in current epoch
     with torch.no_grad():
         for x_batch, y_batch in loader_test:
+            # ensure the shape for batches is the same
+            x_batch_shape = list(x_batch.size())[0]
+            y_batch = torch.reshape(y_batch, (x_batch_shape,))
+
             y_pred = model(x_batch)
+
             predictions += list(y_pred.detach().numpy())
-    return predictions
+
+            loss += F.binary_cross_entropy(y_pred, y_batch)
+
+    return predictions, loss
     
-def calculate_accuray(grand_truth, predictions):
+def calculate_estimation_accuracy(true_values, predictions):
     # Metrics calculation
     true_positives = 0
     true_negatives = 0
-    for true, pred in zip(grand_truth, predictions):
+    for true, pred in zip(true_values, predictions):
         if (pred >= 0.5) and (true == 1):
             true_positives += 1
         elif (pred < 0.5) and (true == 0):
@@ -206,34 +227,54 @@ def calculate_accuray(grand_truth, predictions):
         else:
             pass
     # Return accuracy
-    return (true_positives+true_negatives) / len(grand_truth)
+    return (true_positives+true_negatives) / len(true_values)
 
+def predict(model, article):
+    model.eval()
+    y_pred = model(article)
+
+    return y_pred
+
+    return predictions, loss
 def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
-	if(not use_full_dataset) : tools.set_results_dir("./test_results/")
-	print("Testing Convolutional Neural Network Classifier ...\n")
+    if(not use_full_dataset) : tools.set_results_dir("./test_results/")
+    print("Testing Convolutional Neural Network Classifier ...\n")
 
-	# params for CNN model
-	model_params = {
-		# text preprocessing
-		"seq_len": 224,
-		"num_words": 10000,
-		"embedding_size": 64,
-		
-		# size of convolution outputs
-		"conv_out_size": 32,
+    # params for CNN model
+    model_params = {
+        # text preprocessing
+        "seq_len": 224,
+        "num_words": 10000,
+        "embedding_size": 64,
+        
+        # size of convolution outputs
+        "conv_out_size": 32,
 
-		# Number of strides for each convolution
-		"stride": 2,
+        # Number of strides for each convolution
+        "stride": 2,
 
-		# kernel sizes
-		"kernel_sizes": [2,3,4,5]
-	}
+        # kernel sizes
+        "kernel_sizes": [2,3,4,5]
+    }
 
-	model = CnnModel(model_params)
+    model = CnnModel(model_params)
 
     # training parameters
-	epochs = 20
-	batch_size = 14
-	learning_rate = 0.001
+    epochs = 25
+    batch_size = 112
+    learning_rate = 0.001
 
-	train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learning_rate)
+    y_pred, train_accuracies, test_accuracies, train_losses, test_losses \
+        = train_cnn(
+            model, 
+            X_train, 
+            X_test, 
+            y_train, 
+            y_test, 
+            epochs, 
+            batch_size, 
+            learning_rate
+        )
+
+    tools.plot_cnn_accuracies(train_accuracies,test_accuracies, "CNN", epochs, batch_size, learning_rate, True)
+    tools.plot_cnn_losses(train_losses, test_losses, "CNN", epochs, batch_size, learning_rate, True)

@@ -210,3 +210,69 @@ def display_result(model, X_train):
 
     tokens['fake/real ratio'] = tokens.FAKE / tokens.REAL
     tokens.sort_values('fake/real ratio', ascending=False).head(10)
+
+'''
+    Plots accuracies of training and testing over each epoch
+'''
+def plot_cnn_accuracies(train_accuracies,test_accuracies, name, epochs, batch_size, learning_rate, savefig=False):
+    test_score, trn_score = np.max(test_accuracies),np.max(train_accuracies)
+
+    plt.figure()
+    x = np.linspace(0, len(train_accuracies), len(test_accuracies))
+
+    plt.xlabel("epoch")
+    plt.ylabel("accuracy")
+
+    plt.text(40, 0.1, "train = {:.3f}".format(trn_score), fontsize=10, c="blue")
+    plt.text(40, 0.2, "test = {:.3f}".format(test_score), fontsize=10, c='purple')
+
+    plt.plot(x,train_accuracies, label="train", c="blue", marker="o")
+    plt.plot(x,test_accuracies, label="test", c="purple",  marker="o")
+
+    xpos = test_accuracies.index(test_score)
+    xpos = x[xpos]
+
+    plt.plot(xpos, test_score, c='r', marker='x', ms=15)
+
+    plt.ylim([-10,115])
+
+    plt.title( "Convolutional Neural Network Accuracy\n{} epochs, {} batch size, {} learning rate".format(epochs, batch_size, learning_rate))
+    plt.legend()
+
+    if savefig:
+        file_name = '{}{}/accuracies_plot.png'.format(RESULTS_DIR,name)
+        print("Saving accuracies for {} Classifier to file {}...".format(name, file_name))
+        plt.savefig(file_name)
+
+'''
+    Plots losses of training and testing over each epoch
+'''
+def plot_cnn_losses(train_losses, test_losses, name, epochs, batch_size, learning_rate, savefig=False):
+    train_loss, test_loss = np.min(train_losses),np.min(test_losses)
+
+    plt.figure()
+    x = np.linspace(0, len(train_losses), len(test_losses))
+
+    plt.ylabel("loss")
+    plt.xlabel("epoch")
+
+    plt.text(40, 0.1, "train = {:.3f}".format(train_loss), fontsize=10, c="blue")
+    plt.text(40, 0.2, "test = {:.3f}".format(test_loss), fontsize=10, c='purple')
+
+    plt.plot(x,train_losses, label="train", c="blue", marker="o")
+    plt.plot(x,test_losses, label="test", c="purple",  marker="o")
+
+    xpos = test_losses.index(test_loss)
+    xpos = x[xpos]
+
+    plt.plot(xpos, test_loss, c='r', marker='x', ms=15)
+
+    plt.ylim([-10,50])
+
+    plt.title( "Convolutional Neural Network Loss\n{} epochs, {} batch size, {} learning rate".format(epochs, batch_size, learning_rate))
+    plt.legend()
+
+    if savefig:
+        file_name = '{}{}/loss_plot.png'.format(RESULTS_DIR,name)
+        print("Saving losses for {} Classifier to file {}...".format(name, file_name))
+        plt.savefig(file_name)
