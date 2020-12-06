@@ -132,10 +132,12 @@ def preprocess_single_item(article, for_neural_net=False):
     article = article["text"]
     words = word_tokenize(article)
 
+    tokens = []
+
     for word in words:
         if word in vocabulary:
-            word = vocabulary[word]
-    return words
+            tokens.append(np.int64(vocabulary[word]))
+    return tokens
 
 # Split into training/testing data and preprocess 
 def split_and_preprocess(vocabulary, tokens_per_article, all_news):   
@@ -148,12 +150,9 @@ def split_and_preprocess(vocabulary, tokens_per_article, all_news):
     #Create 80-30 train test split
     print("Splitting data: 70% training, 30% testing")
     X_train, X_test, y_train, y_test = ms.train_test_split(X, y, test_size = 0.3, random_state=0)
-    # print(X_train.shape, X_test.shape)
-    # print(y_train.shape, y_test.shape)
 
     # Generate the Sparse Document-Term Matrix from the training data
     vectorizer = TfidfVectorizer(min_df = 0.1, preprocessor = ' '.join)
-    print(X_train)
     train_sparse_matrix = vectorizer.fit_transform(X_train)
     train_feature_names = vectorizer.get_feature_names()
    
@@ -184,8 +183,6 @@ def split_and_preprocess_cnn(vocabulary, tokens_per_article, all_news):
     #Create 80-30 train test split
     print("Splitting data: 70% training, 30% testing")
     X_train, X_test, y_train, y_test = ms.train_test_split(X, y, test_size = 0.3, random_state=0)
-    # print(X_train.shape, X_test.shape)
-    # print(y_train.shape, y_test.shape)
 
     # Generate the Sparse Document-Term Matrix from the training data
     vectorizer = CountVectorizer(min_df = 0.1, preprocessor = ' '.join)
@@ -232,22 +229,20 @@ def preprocess(use_full_dataset=False):
     
     if use_full_dataset:
         # parse the scraped news articles
-        scraped_data = parse_scraped_data("scraped_raw/scraped_articles.json".format(DATA_DIR))
+        scraped_data = parse_scraped_data("scraped_raw/scraped_articles.json")
         print("\nPreview of Scraped news Dataset")
         print(len(scraped_data))
         print(scraped_data)
         print()
-        # join data
-        all_news = pd.concat([fake_news, real_news, scraped_data], axis=0)
 
         scraped_f = scraped_data[scraped_data["label"] == "FAKE"]
         fake_news = pd.concat([fake_news,scraped_f], axis=0, ignore_index=True)
 
         scraped_t = scraped_data[scraped_data["label"] == "REAL"]
         real_news = pd.concat([real_news,scraped_t], axis=0, ignore_index=True)
-    else:
-         # join data
-        all_news = pd.concat([fake_news, real_news], axis=0)
+
+    # join data
+    all_news = pd.concat([fake_news, real_news, scraped_data], axis=0)
     
     fake_news_all_tokens, fake_news_tokens_per_article = tokenize(fake_news, "fake_news")
     real_news_all_tokens, real_news_tokens_per_article = tokenize(real_news, "real_news")
