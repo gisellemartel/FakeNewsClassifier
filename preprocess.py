@@ -135,9 +135,7 @@ def preprocess_single_item(article, for_neural_net=False):
     for word in words:
         if word in vocabulary:
             word = vocabulary[word]
-    x = pd.DataFrame(words)
-
-    return x
+    return words
 
 # Split into training/testing data and preprocess 
 def split_and_preprocess(vocabulary, tokens_per_article, all_news):   

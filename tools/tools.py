@@ -15,9 +15,9 @@ import sklearn
 import sklearn.metrics
 from sklearn.metrics import mean_squared_error 
 from sklearn.metrics import precision_recall_fscore_support as score
+import torch
 from torch.utils.data import DataLoader
 
-import model.convolutional_neural_network as CNN
 import preprocess as pr
 
 np.random.seed(0)
@@ -354,6 +354,30 @@ def parse_article_url(url):
 
     return article
 
+def evaluation_single(model, loader_test):
+    model.eval()
+    predictions = []
+
+    with torch.no_grad():
+        for x_batch in loader_test:
+            y_pred = model(x_batch)
+
+            predictions += list(y_pred.detach().numpy())
+
+    return predictions
+    
+def evaluation_single(model, loader_test):
+    model.eval()
+    predictions = []
+
+    with torch.no_grad():
+        for x_batch in loader_test.values:
+            y_pred = model(x_batch)
+
+            predictions += list(y_pred.detach().numpy())
+
+    return predictions
+
 def predict_article_class(url, model, is_neural_net=False):
     article = parse_article_url(url)
     if article == None:
@@ -365,6 +389,6 @@ def predict_article_class(url, model, is_neural_net=False):
         return model.predict(article)
     elif article != None and is_neural_net:
         data = DataLoader(article, batch_size=1)
-        return CNN.evaluation(model, data)
+        return evaluation_single(model, data)
     else:
          return None

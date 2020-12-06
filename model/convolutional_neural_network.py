@@ -191,7 +191,7 @@ def train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learn
         print("Epoch: {}, loss: {:.5f}, Train accuracy: {:.5f}%, Test accuracy: {:.5f}%".format(epoch+1, training_loss.item(), train_accuracy, test_accuracy))
 
     return train_accuracies, test_accuracies, train_losses, test_losses
-        
+
 def evaluation(model, loader_test):
     # Set the model in evaluation mode
     model.eval()
