@@ -278,3 +278,44 @@ def plot_cnn_losses(train_losses, test_losses, name, epochs, batch_size, learnin
         file_name = '{}{}/loss_plot.png'.format(RESULTS_DIR,name)
         print("Saving losses for {} Classifier to file {}...".format(name, file_name))
         plt.savefig(file_name)
+
+'''
+    Determines the predicted labels from the predicted probabilities and calculates prediction accuracy
+'''
+def calculate_neural_net_accuracy(true_values, predictions):
+    # Metrics calculation
+    true_positives = 0
+    true_negatives = 0
+
+    N = len(true_values)
+
+    for i in range(N):
+        predicted_label = predictions[i]
+        true_label = true_values[i]
+        
+        if (predicted_label >= 0.5) and (true_label == 1):
+            true_positives += 1
+        elif (predicted_label < 0.5) and (true_label == 0):
+            true_negatives += 1
+
+    return (true_positives+true_negatives) / N
+
+'''
+    Determines the predicted labels from the predicted probabilities and calculates prediction accuracy
+'''
+def calculate_neural_net_predicted_labels(predictions):
+    y_pred_labels = []
+
+    N = len(predictions)
+
+    for i in range(N):
+        predicted_label = predictions[i]
+        
+        if (predicted_label >= 0.5):
+            y_pred_labels.append(1)
+        else:
+            y_pred_labels.append(0)
+
+    y_pred_labels = np.reshape(y_pred_labels, (N, 1))
+
+    return y_pred_labels

@@ -163,8 +163,6 @@ def train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learn
     test_losses = []
     test_accuracies = []
 
-    all_predictions = []
-
     # carry out training of model
     for epoch in range(epochs):
 
@@ -178,7 +176,6 @@ def train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learn
             predictions += pr
             training_loss = training_loss + batch_loss
         
-        all_predictions.append(predictions)
         train_losses.append(training_loss.item())
         
         # Evaluate the prediction result
@@ -193,7 +190,7 @@ def train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learn
         test_accuracies.append(test_accuracy)
         print("Epoch: {}, loss: {:.5f}, Train accuracy: {:.5f}%, Test accuracy: {:.5f}%".format(epoch+1, training_loss.item(), train_accuracy, test_accuracy))
 
-    return all_predictions, train_accuracies, test_accuracies, train_losses, test_losses
+    return train_accuracies, test_accuracies, train_losses, test_losses
         
 def evaluation(model, loader_test):
     # Set the model in evaluation mode
@@ -262,7 +259,7 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     learning_rate = 0.0001
 
     model = CnnModel(model_params)
-    y_pred, train_accuracies, test_accuracies, train_losses, test_losses \
+    train_accuracies, test_accuracies, train_losses, test_losses \
         = train_cnn(
             model, 
             X_train, 
@@ -276,3 +273,16 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
 
     tools.plot_cnn_accuracies(train_accuracies,test_accuracies, "CNN", epochs, batch_size, learning_rate, True)
     tools.plot_cnn_losses(train_losses, test_losses, "CNN", epochs, batch_size, learning_rate, True)
+
+    data = DataLoader(CnnDataset(X_test, y_test), batch_size=batch_size)
+    y_pred, loss = evaluation(model, data)
+
+    y_pred_labels = tools.calculate_neural_net_predicted_labels(y_pred)
+    accuracy = tools.calculate_neural_net_accuracy(y_test.values, y_pred)
+    print("Convolutional Neural Network prediction accuracy: {:.5f}%".format(accuracy*100))
+    print("Convolutional Neural Network prediction loss: {:.5f}".format(loss.item()))
+
+    tools.plot_predicted_labels(y_test.values, y_pred_labels, "CNN", True)
+    tools.display_prediction_scores(y_test.values,y_pred_labels)
+    tools.write_metrics_to_file(y_test.values,y_pred_labels,"CNN")
+    tools.plot_confusion_matrix(y_test.values,y_pred_labels,"CNN", True)
