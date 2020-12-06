@@ -259,7 +259,7 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     # training parameters
     epochs = 24
     batch_size = 108
-    learning_rate = 0.001
+    learning_rate = 0.0001
 
     model = CnnModel(model_params)
     y_pred, train_accuracies, test_accuracies, train_losses, test_losses \
