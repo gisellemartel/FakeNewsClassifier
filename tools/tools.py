@@ -360,24 +360,13 @@ def evaluation_single(model, loader_test):
 
     with torch.no_grad():
         for x_batch in loader_test:
+
             y_pred = model(x_batch)
 
             predictions += list(y_pred.detach().numpy())
 
     return predictions
     
-def evaluation_single(model, loader_test):
-    model.eval()
-    predictions = []
-
-    with torch.no_grad():
-        for x_batch in loader_test.values:
-            y_pred = model(x_batch)
-
-            predictions += list(y_pred.detach().numpy())
-
-    return predictions
-
 def predict_article_class(url, model, is_neural_net=False):
     article = parse_article_url(url)
     if article == None:
@@ -388,7 +377,6 @@ def predict_article_class(url, model, is_neural_net=False):
     if article != None and not is_neural_net:
         return model.predict(article)
     elif article != None and is_neural_net:
-        data = DataLoader(article, batch_size=1)
-        return evaluation_single(model, data)
+        return evaluation_single(model, torch.Tensor(article))
     else:
          return None
