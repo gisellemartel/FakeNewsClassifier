@@ -44,7 +44,7 @@ def perform_hyperparam_grid_search(X_train, y_train, param_grid):
     
 
 def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
-    if(not use_full_dataset) : tools.set_results_dir("./test_results/")
+    if(not use_full_dataset) : tools.set_results_dir("./results/mock_results/")
     print("Testing Random Forest Classifier ...\n")
 
     # set the hyperparams

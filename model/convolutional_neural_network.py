@@ -231,7 +231,7 @@ def calculate_estimation_accuracy(true_values, predictions):
 
 
 def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
-    if(not use_full_dataset) : tools.set_results_dir("./test_results/")
+    if(not use_full_dataset) : tools.set_results_dir("./results/mock_results/")
     print("Testing Convolutional Neural Network Classifier ...\n")
 
     # params for CNN model

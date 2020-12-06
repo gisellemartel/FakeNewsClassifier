@@ -15,7 +15,7 @@ from sklearn.metrics import precision_recall_fscore_support as score
 
 np.random.seed(0)
 
-RESULTS_DIR = "./results/"
+RESULTS_DIR = "./results/real_results/"
 
 def set_results_dir(dir):
     global RESULTS_DIR

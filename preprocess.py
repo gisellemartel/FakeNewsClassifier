@@ -20,34 +20,12 @@ from sklearn.feature_extraction.text import CountVectorizer
 
 np.random.seed(0)
 
-DATA_DIR = "./data/"
+DATA_DIR = "./data/real_data/"
 PREPROCESSED_DATA_DIR = DATA_DIR + "preprocessed/"
 
-news_networks = [
-    "reuters", 
-    "CNN", 
-    "BBC", 
-    "theguardian", 
-    "foxnews", 
-    "nbcnews", 
-    "washingtonpost", 
-    "cbcnews", 
-    "globalnews", 
-    "ctvnews",
-    "breitbart",
-    "infowars",
-    "theonion",
-    "thebeaverton",
-    "prntly",
-    "nationalreport",
-    "dailybuzzlive"
-]
-common_words = ["said", "would", "image", "via"]
+common_words = ["said", "would", "image", "via", "reuters", "CNN"]
 stop_words = list(stopwords.words("english"))
-# include names of news sources in stop words, want the classification to be agnostic of new source 
-stop_words.extend(news_networks)
 stop_words.extend(common_words)
-
 
 # parses the dataset from the csv file and sets the correct label
 def parse_dataset(csv_file, label):
@@ -185,11 +163,11 @@ def preprocess(use_full_dataset=False):
     print("\nPreprocessing of data...\n")
 
     if not use_full_dataset: 
-        global PREPROCESSED_DATA_DIR
-        PREPROCESSED_DATA_DIR = DATA_DIR + "test_preprocessed/"
+        global DATA_DIR
+        DATA_DIR = "./data/mock_data/"
 
-    fake = "Fake.csv" if use_full_dataset else "Fake_test.csv"
-    real = "True.csv" if use_full_dataset else "True_test.csv"
+    fake = "kaggle_raw/Fake.csv"
+    real = "kaggle_raw/True.csv"
     fake_news = parse_dataset(fake, "FAKE")
     print("\nPreview of Fake news Dataset")
     print(fake_news)
@@ -205,7 +183,7 @@ def preprocess(use_full_dataset=False):
     
     if use_full_dataset:
         # parse the scraped news articles
-        scraped_data = parse_scraped_data("scraped_articles.json")
+        scraped_data = parse_scraped_data("scraped_raw/scraped_articles.json".format(DATA_DIR))
         print("\nPreview of Scraped news Dataset")
         print(len(scraped_data))
         print(scraped_data)
