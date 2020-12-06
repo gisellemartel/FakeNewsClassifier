@@ -233,7 +233,7 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     print("Testing Convolutional Neural Network Classifier ...\n")
 
     # params for CNN model
-    seq_len = 224
+    seq_len = 219
     if use_full_dataset: 
         seq_len = 216
         

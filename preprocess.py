@@ -227,22 +227,21 @@ def preprocess(use_full_dataset=False):
     all_news = None
     scraped_data = None
     
-    if use_full_dataset:
-        # parse the scraped news articles
-        scraped_data = parse_scraped_data("scraped_raw/scraped_articles.json")
-        print("\nPreview of Scraped news Dataset")
-        print(len(scraped_data))
-        print(scraped_data)
-        print()
+    # parse the scraped news articles
+    scraped_data = parse_scraped_data("scraped_raw/scraped_articles.json")
+    print("\nPreview of Scraped news Dataset")
+    print(len(scraped_data))
+    print(scraped_data)
+    scraped_f = scraped_data[scraped_data["label"] == "FAKE"]
+    fake_news = pd.concat([fake_news,scraped_f], axis=0)
 
-        scraped_f = scraped_data[scraped_data["label"] == "FAKE"]
-        fake_news = pd.concat([fake_news,scraped_f], axis=0, ignore_index=True)
-
-        scraped_t = scraped_data[scraped_data["label"] == "REAL"]
-        real_news = pd.concat([real_news,scraped_t], axis=0, ignore_index=True)
+    scraped_t = scraped_data[scraped_data["label"] == "REAL"]
+    real_news = pd.concat([real_news,scraped_t], axis=0)
 
     # join data
-    all_news = pd.concat([fake_news, real_news, scraped_data], axis=0)
+    all_news = pd.concat([fake_news, real_news], axis=0)
+
+    print("\nSize of the preprocessed data to be split: {}\n".format(len(all_news)))
     
     fake_news_all_tokens, fake_news_tokens_per_article = tokenize(fake_news, "fake_news")
     real_news_all_tokens, real_news_tokens_per_article = tokenize(real_news, "real_news")
