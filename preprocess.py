@@ -108,10 +108,10 @@ def tokenize(news_data, name):
     return all_tokens, article_tokens_list
 
 def save_to_csv(X_train, X_test, y_train, y_test, type):
-    X_train.to_csv('{}_{}training_data.csv'.format(PREPROCESSED_DATA_DIR, type))
-    X_test.to_csv('{}_{}testing_data.csv'.format(PREPROCESSED_DATA_DIR,type))
-    y_train.to_csv('{}_{}training_labels.csv'.format(PREPROCESSED_DATA_DIR, type))
-    y_test.to_csv('{}_{}testing_labels.csv'.format(PREPROCESSED_DATA_DIR, type))
+    X_train.to_csv('{}{}_training_data.csv'.format(PREPROCESSED_DATA_DIR, type))
+    X_test.to_csv('{}{}_testing_data.csv'.format(PREPROCESSED_DATA_DIR,type))
+    y_train.to_csv('{}{}_training_labels.csv'.format(PREPROCESSED_DATA_DIR, type))
+    y_test.to_csv('{}{}_testing_labels.csv'.format(PREPROCESSED_DATA_DIR, type))
 
 def assign_id_to_article_tokens(vocabulary, tokens_per_article):
         # assign index to each word in vocabulary

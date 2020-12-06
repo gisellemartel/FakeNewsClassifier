@@ -34,7 +34,7 @@ def train_all_estimators(X, y, D):
             
 def perform_hyperparam_grid_search(X_train, y_train, param_grid):
     model = sklearn.tree.DecisionTreeClassifier(max_depth=1,random_state=0)
-    grid_search = sklearn.model_selection.GridSearchCV(verbose=1, cv=5, param_grid=param_grid, estimator=model)
+    grid_search = sklearn.model_selection.GridSearchCV(verbose=1, cv=5, param_grid=param_grid, estimator=model,n_jobs=5)
     grid_search.fit(X_train, y_train)
     return grid_search
 
