@@ -4,6 +4,7 @@ from sklearn import preprocessing
 warnings.filterwarnings("ignore")
 
 import numpy as np
+import newspaper
 import math
 import matplotlib
 import matplotlib.pyplot as plt
@@ -330,12 +331,16 @@ def calculate_neural_net_predicted_labels(predictions):
     fetches article data from URL and preprocesses for prediction
 '''
 def parse_article_url(url):
+    user_agent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:78.0) Gecko/20100101 Firefox/78.0'
+    config = newspaper.Config()
+    config.browser_user_agent = user_agent
+
     print(url)
 
     content = {}
     article = {}
     try:
-        content = newspaper.Article(url)
+        content = newspaper.Article(url, config=config)
         content.download()
         content.parse()
     except Exception as e:

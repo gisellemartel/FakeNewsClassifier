@@ -20,6 +20,7 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 np.random.seed(0)
+vocabulary = {}
 
 DATA_DIR = "./data/real_data/"
 PREPROCESSED_DATA_DIR = DATA_DIR + "preprocessed/"
@@ -128,26 +129,13 @@ def assign_id_to_article_tokens(vocabulary, tokens_per_article):
     return indexed_words_per_article
 
 def preprocess_single_item(article, for_neural_net=False):
-    print(article)
     article = article["text"]
     words = word_tokenize(article)
-    words = [word.lower() for word in words if word.isalpha()]
-    words = [word for word in words if word not in stop_words and word not in string.punctuation]
-    lemmatizer = WordNetLemmatizer()
-    words = [lemmatizer.lemmatize(word) for word in words]
 
-    feature_names = []
-    vectorizer = None
-    if not for_neural_net:
-        vectorizer = TfidfVectorizer(min_df = 0.1, preprocessor = ' '.join)
-    else:
-        vectorizer = CountVectorizer(preprocessor = ' '.join, vocabulary = feature_names)
-
-    sparse_matrix = vectorizer.fit_transform(words)
-    feature_names = vectorizer.get_feature_names()
-
-    denselist = sparse_matrix.todense().tolist() 
-    x = pd.DataFrame(denselist, columns=feature_names)
+    for word in words:
+        if word in vocabulary:
+            word = vocabulary[word]
+    x = pd.DataFrame(words)
 
     return x
 
@@ -167,6 +155,7 @@ def split_and_preprocess(vocabulary, tokens_per_article, all_news):
 
     # Generate the Sparse Document-Term Matrix from the training data
     vectorizer = TfidfVectorizer(min_df = 0.1, preprocessor = ' '.join)
+    print(X_train)
     train_sparse_matrix = vectorizer.fit_transform(X_train)
     train_feature_names = vectorizer.get_feature_names()
    
@@ -272,7 +261,7 @@ def preprocess(use_full_dataset=False):
     tokens_per_article = fake_news_tokens_per_article + real_news_tokens_per_article
 
     # create the vocabulary of the dataset. Assign unique numerical id to each word
-    vocabulary = {}
+    global vocabulary
     for i, token in enumerate(all_tokens):
         if token not in vocabulary:
             vocabulary[token] = i + 1
