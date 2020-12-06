@@ -16,6 +16,8 @@ def support_vector_machine_train(X,y,c,g,k):
 def support_vector_machine_predict(svc, X):
     return svc.predict(X)
 
+np.random.seed(0)
+
 '''
     Trains each estimator with the given hyperparams, displays the training accuracy for each and returns all estimators
 '''

@@ -16,6 +16,7 @@ import warnings
 # warnings.filterwarnings("ignore", category=sklearn.exceptions.ConvergenceWarning)
 np.set_printoptions(precision=3, suppress=True)
 torch.manual_seed(0)
+np.random.seed(0)
 
 class CnnDataset(Dataset):
     def __init__(self, x, y):
