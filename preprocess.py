@@ -44,6 +44,8 @@ def parse_dataset(csv_file, label):
     print("Setting label for news dataset: {}".format(label))
     news["label"] = label
 
+    news.drop(["subject"], axis=1)
+
     return news
 
 '''
@@ -124,6 +126,30 @@ def assign_id_to_article_tokens(vocabulary, tokens_per_article):
         indexed_words_per_article.append(indexed_words)
 
     return indexed_words_per_article
+
+def preprocess_single_item(article, for_neural_net=False):
+    print(article)
+    article = article["text"]
+    words = word_tokenize(article)
+    words = [word.lower() for word in words if word.isalpha()]
+    words = [word for word in words if word not in stop_words and word not in string.punctuation]
+    lemmatizer = WordNetLemmatizer()
+    words = [lemmatizer.lemmatize(word) for word in words]
+
+    feature_names = []
+    vectorizer = None
+    if not for_neural_net:
+        vectorizer = TfidfVectorizer(min_df = 0.1, preprocessor = ' '.join)
+    else:
+        vectorizer = CountVectorizer(preprocessor = ' '.join, vocabulary = feature_names)
+
+    sparse_matrix = vectorizer.fit_transform(words)
+    feature_names = vectorizer.get_feature_names()
+
+    denselist = sparse_matrix.todense().tolist() 
+    x = pd.DataFrame(denselist, columns=feature_names)
+
+    return x
 
 # Split into training/testing data and preprocess 
 def split_and_preprocess(vocabulary, tokens_per_article, all_news):   

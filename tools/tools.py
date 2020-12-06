@@ -1,4 +1,6 @@
 import warnings
+
+from sklearn import preprocessing
 warnings.filterwarnings("ignore")
 
 import numpy as np
@@ -12,6 +14,10 @@ import sklearn
 import sklearn.metrics
 from sklearn.metrics import mean_squared_error 
 from sklearn.metrics import precision_recall_fscore_support as score
+from torch.utils.data import DataLoader
+
+import model.convolutional_neural_network as CNN
+import preprocess as pr
 
 np.random.seed(0)
 
@@ -319,3 +325,41 @@ def calculate_neural_net_predicted_labels(predictions):
     y_pred_labels = np.reshape(y_pred_labels, (N, 1))
 
     return y_pred_labels
+
+'''
+    fetches article data from URL and preprocesses for prediction
+'''
+def parse_article_url(url):
+    print(url)
+
+    content = {}
+    article = {}
+    try:
+        content = newspaper.Article(url)
+        content.download()
+        content.parse()
+    except Exception as e:
+        print("Invalid url! Please try again")
+        return None
+
+    article['title'] = content.title
+    article['text'] = content.text
+    article['link'] = content.url
+    article['date'] = content.publish_date.isoformat()
+
+    return article
+
+def predict_article_class(url, model, is_neural_net=False):
+    article = parse_article_url(url)
+    if article == None:
+        return article
+
+    article = pr.preprocess_single_item(article, is_neural_net)
+
+    if article != None and not is_neural_net:
+        return model.predict(article)
+    elif article != None and is_neural_net:
+        data = DataLoader(article, batch_size=1)
+        return CNN.evaluation(model, data)
+    else:
+         return None
