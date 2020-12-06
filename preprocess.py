@@ -17,13 +17,14 @@ from nltk.corpus import stopwords
 import sklearn
 import sklearn.model_selection as ms
 from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 np.random.seed(0)
 
 DATA_DIR = "./data/real_data/"
 PREPROCESSED_DATA_DIR = DATA_DIR + "preprocessed/"
 
-common_words = ["said", "would", "image", "via", "reuters", "CNN"]
+common_words = ["said", "would", "image", "via", "reuters"]
 stop_words = list(stopwords.words("english"))
 stop_words.extend(common_words)
 
@@ -106,11 +107,11 @@ def tokenize(news_data, name):
 
     return all_tokens, article_tokens_list
 
-def save_to_csv(X_train, X_test, y_train, y_test):
-    X_train.to_csv('{}training_data.csv'.format(PREPROCESSED_DATA_DIR))
-    X_test.to_csv('{}testing_data.csv'.format(PREPROCESSED_DATA_DIR))
-    y_train.to_csv('{}training_labels.csv'.format(PREPROCESSED_DATA_DIR))
-    y_test.to_csv('{}testing_labels.csv'.format(PREPROCESSED_DATA_DIR))
+def save_to_csv(X_train, X_test, y_train, y_test, type):
+    X_train.to_csv('{}_{}training_data.csv'.format(PREPROCESSED_DATA_DIR, type))
+    X_test.to_csv('{}_{}testing_data.csv'.format(PREPROCESSED_DATA_DIR,type))
+    y_train.to_csv('{}_{}training_labels.csv'.format(PREPROCESSED_DATA_DIR, type))
+    y_test.to_csv('{}_{}testing_labels.csv'.format(PREPROCESSED_DATA_DIR, type))
 
 def assign_id_to_article_tokens(vocabulary, tokens_per_article):
         # assign index to each word in vocabulary
@@ -126,6 +127,41 @@ def assign_id_to_article_tokens(vocabulary, tokens_per_article):
 
 # Split into training/testing data and preprocess 
 def split_and_preprocess(vocabulary, tokens_per_article, all_news):   
+    X = np.array(tokens_per_article, dtype="object")
+
+    labels = all_news["label"]
+    y = [1 if article == "FAKE" else 0 for article in labels]
+    y = pd.DataFrame(y, columns=["label"])  
+
+    #Create 80-30 train test split
+    print("Splitting data: 70% training, 30% testing")
+    X_train, X_test, y_train, y_test = ms.train_test_split(X, y, test_size = 0.3, random_state=0)
+    # print(X_train.shape, X_test.shape)
+    # print(y_train.shape, y_test.shape)
+
+    # Generate the Sparse Document-Term Matrix from the training data
+    vectorizer = TfidfVectorizer(min_df = 0.1, preprocessor = ' '.join)
+    train_sparse_matrix = vectorizer.fit_transform(X_train)
+    train_feature_names = vectorizer.get_feature_names()
+   
+    # Generate the Sparse Document-Term Matrix from the testing data
+    vectorizer = TfidfVectorizer(preprocessor = ' '.join, vocabulary = train_feature_names)
+    test_sparse_matrix = vectorizer.fit_transform(X_test)
+    test_feature_names = vectorizer.get_feature_names()
+
+    denselist_train = train_sparse_matrix.todense().tolist()
+    denselist_test = test_sparse_matrix.todense().tolist() 
+
+    # convert testing and training data to pandas data frames
+    X_train = pd.DataFrame(denselist_train, columns=train_feature_names)
+    X_test = pd.DataFrame(denselist_test, columns=test_feature_names)
+    y_train = pd.DataFrame(y_train, columns=["label"])
+    y_test = pd.DataFrame(y_test, columns=["label"])
+
+    return X_train, X_test, y_train, y_test
+
+# Split into training/testing data and preprocess for CNN (uses CountVectorizer instead)
+def split_and_preprocess_cnn(vocabulary, tokens_per_article, all_news):   
     X = np.array(tokens_per_article, dtype="object")
 
     labels = all_news["label"]
@@ -218,14 +254,15 @@ def preprocess(use_full_dataset=False):
     print()
 
     # Split and preprocess the data into training and testing data
-    X_train, X_test, y_train, y_test = split_and_preprocess(vocabulary,tokens_per_article, all_news)
+    ml_data = split_and_preprocess(vocabulary,tokens_per_article, all_news)
+    cnn_data = split_and_preprocess_cnn(vocabulary,tokens_per_article, all_news)
 
     print("\nPreview of training data:")
-    print(X_train[:5])
-    print(y_train[:5])
+    print(ml_data[0][:5])
+    print(ml_data[2][:5])
     print()
 
-    return  X_train, X_test, y_train, y_test
+    return ml_data, cnn_data 
 
 if __name__ == "__main__":
-    X_train, X_test, y_train, y_test = preprocess()
+    ml_data, cnn_data = preprocess()

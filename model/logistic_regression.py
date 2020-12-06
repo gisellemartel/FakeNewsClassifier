@@ -28,7 +28,7 @@ def train_all_estimators(X, y, C):
         estimators.append(estimator)
         y_pred = logistic_regression_predict(estimator,X)
         a = accuracy_score(y,y_pred)*100
-        print("{:.3f}% training accuracy for C={:.4f}".format(a, c))
+        print("{:.3f}% training accuracy for C={:.6f}".format(a, c))
     return estimators
 
 def perform_hyperparam_grid_search(X_train, y_train, param_grid):
@@ -42,7 +42,7 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     print("Testing Logistic Regression Classifier ...\n")
 
     # set the hyperparams
-    C = np.logspace(-4,4,9)
+    C = np.logspace(-6,6,13)
     param_grid = {"C":C}
 
     # fetch all the estimators given the chosen hyperparameters

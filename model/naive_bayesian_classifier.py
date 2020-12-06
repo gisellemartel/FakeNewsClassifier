@@ -46,8 +46,9 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     print("Testing Naive Bayesian Classifier ...\n")
     
     # set the hyperparams
-    A = np.logspace(-4,4,9)
+    A = np.linspace(0,50,102)
     F = [True, False]
+
     param_grid = {"alpha":A, "fit_prior":F}
 
     # fetch all the estimators given the chosen hyperparameters

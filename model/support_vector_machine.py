@@ -9,7 +9,7 @@ sys.path.insert(1, '../')
 import tools.tools as tools
 
 def support_vector_machine_train(X,y,c,g,k):
-    svc = SVC(kernel=k, C=c, gamma=g, max_iter=100, random_state=0)
+    svc = SVC(kernel=k, C=c, gamma=g, max_iter=200, random_state=0)
     svc.fit(X, y)
     return svc
 
@@ -22,9 +22,9 @@ def support_vector_machine_predict(svc, X):
 def train_all_estimators(X, y, C, G, K):
     print("Fitting data to SVC, this may take a while...")
     estimators = []
-    for c in C:
-        for g in G:
-            for k in K:
+    for k in K:
+        for c in C:
+            for g in G:
                 svc = support_vector_machine_train(X,y,c,g,k)
                 estimators.append(svc)
                 y_pred = support_vector_machine_predict(svc,X)
@@ -44,8 +44,8 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     print("Testing SVM Classifier ...\n")
 
     # set the hyperparams
-    C = np.logspace(-2,3,6)
-    G = np.logspace(-2,3,6)
+    C = np.logspace(-2,2,5)
+    G = np.logspace(-2,2,5)
     K = ["rbf", "linear"]
 
     param_grid = {"C":C, "gamma": G, "kernel": K}
