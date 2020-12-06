@@ -13,6 +13,8 @@ import sklearn.metrics
 from sklearn.metrics import mean_squared_error 
 from sklearn.metrics import precision_recall_fscore_support as score
 
+np.random.seed(0)
+
 RESULTS_DIR = "./results/"
 
 def set_results_dir(dir):

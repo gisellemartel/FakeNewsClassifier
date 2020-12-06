@@ -18,12 +18,33 @@ import sklearn
 import sklearn.model_selection as ms
 from sklearn.feature_extraction.text import CountVectorizer
 
+np.random.seed(0)
+
 DATA_DIR = "./data/"
 PREPROCESSED_DATA_DIR = DATA_DIR + "preprocessed/"
 
-news_networks = ["reuters", "CNN", "BBC", "theguardian", "foxnews", "nbcnews", "washingtonpost", "cbcnews", "globalnews", "ctvnews"]
+news_networks = [
+    "reuters", 
+    "CNN", 
+    "BBC", 
+    "theguardian", 
+    "foxnews", 
+    "nbcnews", 
+    "washingtonpost", 
+    "cbcnews", 
+    "globalnews", 
+    "ctvnews",
+    "breitbart",
+    "infowars",
+    "theonion",
+    "thebeaverton",
+    "prntly",
+    "nationalreport",
+    "dailybuzzlive"
+]
 common_words = ["said", "would", "image", "via"]
 stop_words = list(stopwords.words("english"))
+# include names of news sources in stop words, want the classification to be agnostic of new source 
 stop_words.extend(news_networks)
 stop_words.extend(common_words)
 

@@ -5,6 +5,8 @@ from sklearn.metrics import accuracy_score
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import GridSearchCV
 
+np.random.seed(0)
+
 import sys
 sys.path.insert(1, '../')
 

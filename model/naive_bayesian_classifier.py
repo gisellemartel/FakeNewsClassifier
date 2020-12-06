@@ -4,6 +4,8 @@ import sklearn
 from sklearn.metrics import accuracy_score
 from sklearn.naive_bayes import MultinomialNB
 
+np.random.seed(0)
+
 import sys
 sys.path.insert(1, '../')
 

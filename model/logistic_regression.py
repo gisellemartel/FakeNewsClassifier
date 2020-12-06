@@ -2,6 +2,8 @@ import numpy as np
 import sklearn
 from sklearn.metrics import accuracy_score
 
+np.random.seed(0)
+
 import sys
 sys.path.insert(1, '../')
 

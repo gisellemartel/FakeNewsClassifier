@@ -2,6 +2,7 @@ import numpy as np
 import sklearn
 import sklearn.tree
 from sklearn.metrics import accuracy_score
+np.random.seed(0)
 
 import sys
 sys.path.insert(1, '../')
