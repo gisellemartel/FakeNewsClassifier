@@ -96,15 +96,20 @@ def display_prediction_scores(test,prediction):
 '''
 def write_metrics_to_file(test, prediction, classifier_name):
     precision, recall, fscore, support = score(test, prediction)
+    accuracy = sklearn.metrics.accuracy_score(test,prediction)
+    mean_sqr_err = mean_squared_error(test, prediction)
+
     file_name = '{}{}/metrics.txt'.format(RESULTS_DIR,classifier_name)
     print("Writing metrics to file {}...".format(file_name))
     with open(file_name, 'w') as file:
-        file.write('False Precision : {:.3f}\n'.format(precision[0]))
-        file.write('False Recall : {:.3f}\n'.format(recall[0]))
-        file.write('False fscore : {:.3f}\n\n'.format(fscore[0]))
-        file.write('True Precision : {:.3f}\n'.format(precision[1]))
-        file.write('True Recall : {:.3f}\n'.format(recall[1]))
-        file.write('True fscore : {:.3f}\n'.format(fscore[1]))
+        file.write('Accuracy: {:.5f}\n'.format(accuracy*100))
+        file.write('Mean squared error: {:.5f}\n'.format(mean_sqr_err*100))
+        file.write('False Precision : {:.5f}\n'.format(precision[0]*100))
+        file.write('False Recall : {:.5f}\n'.format(recall[0]*100))
+        file.write('False fscore : {:.5f}\n\n'.format(fscore[0]*100))
+        file.write('True Precision : {:.5f}\n'.format(precision[1]*100))
+        file.write('True Recall : {:.5f}\n'.format(recall[1]*100))
+        file.write('True fscore : {:.5f}\n'.format(fscore[1]*100))
     print()
 
 '''
