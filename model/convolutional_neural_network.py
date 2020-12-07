@@ -151,9 +151,12 @@ def process_batch(model, optimizer, x_batch, y_batch):
 
     return predictions, loss
 
+def generate_batch_data(X,y,batch_size):
+    return DataLoader(CnnDataset(X, y), batch_size=batch_size)
+
 def train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learning_rate):
-    loader_train = DataLoader(CnnDataset(X_train, y_train), batch_size=batch_size)
-    loader_test = DataLoader(CnnDataset(X_test, y_test), batch_size=batch_size)
+    loader_train = generate_batch_data(X_train,y_train,batch_size)
+    loader_test = generate_batch_data(X_test,y_test,batch_size)
 
     optimizer = optim.RMSprop(model.parameters(), lr=learning_rate)
 
@@ -179,7 +182,7 @@ def train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learn
         train_losses.append(training_loss.item())
         
         # Evaluate the prediction result
-        test_predictions, test_loss = evaluation(model, loader_test)
+        test_predictions, test_loss = predict(model, loader_test)
         test_losses.append(test_loss.item())
         
         # Metrics calculation
@@ -192,7 +195,7 @@ def train_cnn(model, X_train, X_test, y_train, y_test, epochs, batch_size, learn
 
     return train_accuracies, test_accuracies, train_losses, test_losses
 
-def evaluation(model, loader_test):
+def predict(model, batch_data):
     # Set the model in evaluation mode
     model.eval()
     predictions = []
@@ -200,7 +203,7 @@ def evaluation(model, loader_test):
 
     # evaluate predictions in current epoch
     with torch.no_grad():
-        for x_batch, y_batch in loader_test:
+        for x_batch, y_batch in batch_data:
             # ensure the shape for batches is the same
             x_batch_shape = list(x_batch.size())[0]
             y_batch = torch.reshape(y_batch, (x_batch_shape,))
@@ -274,13 +277,13 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     tools.plot_cnn_accuracies(train_accuracies,test_accuracies, "CNN", epochs, batch_size, learning_rate, True)
     tools.plot_cnn_losses(train_losses, test_losses, "CNN", epochs, batch_size, learning_rate, True)
 
-    data = DataLoader(CnnDataset(X_test, y_test), batch_size=batch_size)
-    y_pred, loss = evaluation(model, data)
+    batch_data = generate_batch_data(X_test,y_test,batch_size)
+    y_pred, loss = predict(model, batch_data)
 
     y_pred_labels = tools.calculate_neural_net_predicted_labels(y_pred)
     accuracy = tools.calculate_neural_net_accuracy(y_test.values, y_pred)
-    print("Convolutional Neural Network prediction accuracy: {:.5f}%".format(accuracy*100))
-    print("Convolutional Neural Network prediction loss: {:.5f}".format(loss.item()))
+    print("\nConvolutional Neural Network prediction accuracy: {:.5f}%".format(accuracy*100))
+    print("Convolutional Neural Network prediction loss: {:.5f}\n".format(loss.item()))
 
     tools.plot_predicted_labels(y_test.values, y_pred_labels, "CNN", True)
     tools.display_prediction_scores(y_test.values,y_pred_labels)

@@ -148,10 +148,11 @@ def split_and_preprocess(vocabulary, tokens_per_article, all_news):
     y = pd.DataFrame(y, columns=["label"])  
 
     #Create 80-30 train test split
-    print("Splitting data: 70% training, 30% testing")
+    print("Splitting copy of data for traditional ML models: 70% training, 30% testing")
     X_train, X_test, y_train, y_test = ms.train_test_split(X, y, test_size = 0.3, random_state=0)
 
     # Generate the Sparse Document-Term Matrix from the training data
+    print("Vectorizing copy of training and testing data for traditional ML models using IDF Vectorizer\n")
     vectorizer = TfidfVectorizer(min_df = 0.1, preprocessor = ' '.join)
     train_sparse_matrix = vectorizer.fit_transform(X_train)
     train_feature_names = vectorizer.get_feature_names()
@@ -181,10 +182,11 @@ def split_and_preprocess_cnn(vocabulary, tokens_per_article, all_news):
     y = pd.DataFrame(y, columns=["label"])  
 
     #Create 80-30 train test split
-    print("Splitting data: 70% training, 30% testing")
+    print("Splitting copy of data for CNN model: 70% training, 30% testing")
     X_train, X_test, y_train, y_test = ms.train_test_split(X, y, test_size = 0.3, random_state=0)
 
     # Generate the Sparse Document-Term Matrix from the training data
+    print("Vectorizing copy of training and testing data for CNN model using Count Vectorizer\n")
     vectorizer = CountVectorizer(min_df = 0.1, preprocessor = ' '.join)
     train_sparse_matrix = vectorizer.fit_transform(X_train)
     train_feature_names = vectorizer.get_feature_names()
@@ -232,16 +234,19 @@ def preprocess(use_full_dataset=False):
     print("\nPreview of Scraped news Dataset")
     print(len(scraped_data))
     print(scraped_data)
+
     scraped_f = scraped_data[scraped_data["label"] == "FAKE"]
+    print("\n\nCombining FAKE scraped articles with fake_news data...")
     fake_news = pd.concat([fake_news,scraped_f], axis=0)
 
     scraped_t = scraped_data[scraped_data["label"] == "REAL"]
+    print("Combining REAL scraped articles with real_news data...")
     real_news = pd.concat([real_news,scraped_t], axis=0)
 
     # join data
     all_news = pd.concat([fake_news, real_news], axis=0)
 
-    print("\nSize of the preprocessed data to be split: {}\n".format(len(all_news)))
+    print("\nSize of the cleaned data to be tokenized and split: {}\n".format(len(all_news)))
     
     fake_news_all_tokens, fake_news_tokens_per_article = tokenize(fake_news, "fake_news")
     real_news_all_tokens, real_news_tokens_per_article = tokenize(real_news, "real_news")
@@ -258,15 +263,20 @@ def preprocess(use_full_dataset=False):
         if token not in vocabulary:
             vocabulary[token] = i + 1
 
-    print()
+    print("\nCombining real_news and fake_news datasets...")
 
     # Split and preprocess the data into training and testing data
     ml_data = split_and_preprocess(vocabulary,tokens_per_article, all_news)
     cnn_data = split_and_preprocess_cnn(vocabulary,tokens_per_article, all_news)
 
-    print("\nPreview of training data:")
+    print("\nPreview of ML training data:")
     print(ml_data[0][:5])
     print(ml_data[2][:5])
+    print()
+
+    print("\nPreview of CNN training data:")
+    print(cnn_data[0][:5])
+    print(cnn_data[2][:5])
     print()
 
     return ml_data, cnn_data 
