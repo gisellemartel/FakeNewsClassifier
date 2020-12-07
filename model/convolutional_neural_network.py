@@ -1,3 +1,7 @@
+''' 
+    Source code inspired by implementation here: https://github.com/FernandoLpz/Text-Classification-CNN-PyTorch
+'''
+
 import sys
 sys.path.insert(1, '../')
 
