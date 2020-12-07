@@ -293,6 +293,3 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     tools.display_prediction_scores(y_test.values,y_pred_labels)
     tools.write_metrics_to_file(y_test.values,y_pred_labels,"CNN")
     tools.plot_confusion_matrix(y_test.values,y_pred_labels,"CNN", True)
-
-    print()
-    tools.display_result(model, X_train)
