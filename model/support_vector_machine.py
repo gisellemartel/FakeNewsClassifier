@@ -78,7 +78,7 @@ def test_run(X_train, X_test, y_train, y_test, use_full_dataset=False):
     # use best estimator to make predictions
     y_pred = support_vector_machine_predict(best_estimator, X_test)
 
-    tools.plot_predicted_labels(y_test, y_pred, "SVC", True)
-    tools.display_prediction_scores(y_test,y_pred)
-    tools.write_metrics_to_file(y_test,y_pred,"SVC")
-    tools.plot_confusion_matrix(y_test,y_pred,"SVC", True)
+    tools.plot_predicted_labels(y_test.values, y_pred, "SVC", True)
+    tools.display_prediction_scores(y_test.values,y_pred)
+    tools.write_metrics_to_file(y_test.values,y_pred,"SVC")
+    tools.plot_confusion_matrix(y_test.values,y_pred,"SVC", True)
