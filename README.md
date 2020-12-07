@@ -125,4 +125,5 @@ There are 2 options to run and test the program.
 - https://towardsdatascience.com/text-classification-with-cnns-in-pytorch-1113df31e79f?sk=12e7c4b3092297ee0e1c71d659297043
 - https://github.com/FernandoLpz/Text-Classification-CNN-PyTorch
 
+### Also consulted all COMP 432 Labs and Assignment course materials by Dr. Andrew Delong from Concordia Univeristy in implementation
 
